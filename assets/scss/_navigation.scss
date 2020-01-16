@@ -1,0 +1,140 @@
+.navigation {
+    background: #FFF;
+    padding: 10px 0 10px;
+    box-shadow: 0 2px 5px rgba(10, 10, 10, 0.1);
+    border-bottom: 1px solid #eee;
+    position: relative;
+    z-index: 5;
+
+    .navbar {
+        padding: 0;
+        
+
+        .navbar-brand {
+            background-image: $background-image;
+            height: 48px;
+            width: 48px;
+            border-radius: 5px;
+            color: #FFF;
+            text-align: center;
+            line-height: 48px;
+            padding: 0;
+            font-weight: bolder;
+            font-size: 26px;
+        }
+
+        .navbar-nav {
+            
+            .nav-link {
+                padding: 12px 15px;
+                color: #014;
+            }
+
+            .nav-item {
+                position: relative;
+
+                &.active {
+                    font-weight: 600;
+                }
+
+                &.active::after {
+                    content: " ";
+                    position: absolute;
+                    width: 100%;
+                    border-bottom: 3px solid $primary-color;
+                    bottom: -11px;
+                }
+            }
+            @media (max-width:991px) {
+                border-top: 1px solid #ddd;
+                margin-top: 15px;
+                .nav-item.active::after {content: none;}
+            }
+
+        }
+    }
+
+    
+}
+
+.hero {
+    // background-image: $background-image;
+    background-color: #673ab7;
+    // background-image: url('https://www.digitalocean.com/assets/media/homepage/bg-home-1-d54581d7.jpg');
+    padding: 60px 0;
+    position: relative;
+
+    .hero-svg{
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        
+    }
+        
+
+
+    ul.hero-tags {
+        position: relative;
+        z-index: 10;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: flex;
+        flex-flow: row wrap;
+        align-content: flex-start;
+
+        li {
+            margin: 5px;
+            flex-grow: 1;
+            flex-shrink: 1;
+            flex-basis: 230px;
+
+            a {
+                border: 1px solid #eee;
+                background-color: #fff;
+                box-shadow: 0 2px 8px 0 rgba(10, 10, 10, .1);
+                border-radius: 3px;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-self: stretch;
+                padding: 1rem;
+                text-decoration: none;
+                color: #566;
+
+                &:hover {
+                    color: $primary-color;
+                    border-color: lighten($primary-color, 30%)
+                }
+
+                .icon {
+                    font-weight: 600;
+                    width: 48px;
+                    i{
+                        font-size: 36px;
+                        display: block;
+                        width: 48px;
+                        text-align: center;
+                        color: #0069ff;
+                      }
+                    img{width: 100%; display: block;}
+                }
+
+                .text {
+                    flex: 1;
+                    padding-left: 1rem;
+
+                    .caption {
+                        font-size: .8rem;
+                        margin-bottom: .2rem;
+                        color: #aaa;
+                    }
+                }
+            }
+        }
+    }
+
+}

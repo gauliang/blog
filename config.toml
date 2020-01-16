@@ -1,0 +1,56 @@
+baseURL = "https://gauliang.github.io"
+languageCode = "zh"
+title = "Gauliang"
+archetypes= "utf-8"
+theme = "tech-blog"
+paginate=10
+sectionPagesMenu = "main"
+publishdir="gauliang.github.io"
+[menu]
+
+  [[menu.main]]
+    identifier = "blog"
+    name = "博客"
+    title = "博客"
+    url = "/blog/"
+    weight = 1
+    hasChildren= true
+
+  [[menu.main]]
+    identifier= "series"
+    name= "系列"
+    title= "系列"
+    url= "/series/"
+    weight= 2
+
+  [[menu.main]]
+    identifier= "tags"
+    name= "Tags"
+    title= "Tags"
+    url= "/tags/"
+    weight= 3
+
+  # [[menu.main]]
+  #   identifier = "about"
+  #   name = "关于"
+  #   title = "关于"
+  #   url = "/about/"
+  #   weight = 10
+
+
+[markup]
+  [markup.highlight]
+    codeFences = true
+    guessSyntax = false
+    hl_Lines = ""
+    lineNoStart = 1
+    lineNos = true
+    lineNumbersInTable = true
+    noClasses = false
+    style = "monokai"
+    tabWidth = 4
+
+[taxonomies]
+tag = "tags"
+series = "series"
+

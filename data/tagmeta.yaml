@@ -1,0 +1,32 @@
+data:
+- icon: "images/kubernetes.svg"
+  isImage: true
+  name: "Kubernetes"
+  identifier: "Kubernetes"
+
+- icon: "images/go.svg"
+  isImage: true
+  name: "Go lang"
+  identifier: "Golang"
+
+- icon: "ti-layout-slider-alt"
+  isImage: false
+  name: "Service Mesh"
+  identifier: "Service-Mesh"
+  
+
+- icon: "images/java.svg"
+  isImage: true
+  name: "Java"
+  identifier: "java"
+
+- icon: "ti-loop"
+  isImage: false
+  name: "DevOps"
+  identifier: "devops"
+
+
+- icon: "images/node-dot-js.svg"
+  isImage: true
+  name: "Node.js"
+  identifier: "NodeJs"

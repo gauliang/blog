@@ -1,0 +1,25 @@
+.pagination {
+    justify-content: center;
+    overflow: visible;
+
+    .page-item {
+        text-align: center;
+        margin: 0 5px;
+        
+        .page-link {
+            display: block;
+            color: #888;
+            background-color: #FFF;
+            border: 1px solid #eee;
+            box-shadow: 0 2px 8px 0 rgba(10,10,10,.1);
+            border-radius: 3px;
+        }
+        &.active .page-link, .page-link:hover{
+            color: #FFF;
+            background-color: lighten($color: #007bff, $amount: 10)
+        }
+    }
+
+}
+
+.gl-navigation {}

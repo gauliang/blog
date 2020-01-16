@@ -1,0 +1,74 @@
+{{ define "main" }}
+{{ $baseurl := .Site.BaseURL }}
+<header class="post-header">
+    <div class="container">
+        <h1 class="post-title">{{ .Title }}</h1>
+        <div class="post-time">
+            {{ .Date.Format "Jan 2, 2006" }} by {{ .Params.author }}
+        </div>
+    </div>
+</header>
+<div class="container">
+    <div class="row">
+        <div class="col-xl-2 d-none d-xl-block">
+            <div class="table-of-contents" id="table-of-contents">
+                {{ $bootstrapToc := replaceRE "</a>\\s*<ul[\\s\\S]+?</ul>" "</a>" (replaceRE "<a" "<a class=\"nav-link\" " .TableOfContents) }}
+                {{ safeHTML $bootstrapToc}}
+            </div>
+        </div>
+        <div class="col-xl-8 post-content">
+            <div class="post-meta-count">
+                <i class="ti-info-alt"></i>
+                <strong>阅读全文约需 {{ add 1 (div .WordCount 120) }} 分钟</strong>
+            </div>
+            <article id="post-content">
+
+                {{$postContent := replaceRE "<table>([\\s\\S]+?)</table>" "<div class=\"table-responsive\"><table class=\"table\">$1</table></div>" .Content}}
+                {{ safeHTML $postContent}}
+            </article>
+
+            <div class="post-tag">
+                <strong>Tags:</strong>
+                {{ range $i, $e := .Params.tags }}
+                {{if $i}} / {{end}}
+                <a href="{{ $baseurl }}{{ $.Site.LanguagePrefix }}tags/{{ . }}">{{ . }}</a>
+                {{ end }}
+            </div>
+
+
+            <div class="next-and-prev-post">
+                {{with .Site.RegularPages.Prev . }}
+                <a href="{{ .Permalink }}" class="prev-post">
+                    <i class="icon ti-arrow-left"></i>
+                    <div class="text">
+                        <div class="caption">{{.Date.Format "2006-01-02 15:04:05"}}</div>
+                        <div class="title">{{ .Title }}</div>
+                    </div>
+                </a>
+                {{end}}
+                {{with .Site.RegularPages.Next . }}
+                <a href="{{ .Permalink }}" class="next-post">
+                    <div class="text">
+                        <div class="caption">{{.Date.Format "2006-01-02 15:04:05"}}</div>
+                        <div class="title">{{ .Title }}</div>
+                    </div>
+                    <i class="icon ti-arrow-right"></i>
+                </a>
+                {{end}}
+            </div>
+
+        </div>
+        <div class="col-xl-2 d-none d-xl-block">
+            {{ $related := .Site.RegularPages.Related . | first 5 }}
+            {{ with $related }}
+            <ul class="post-related">
+                {{ range . }}
+                <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+                {{ end }}
+            </ul>
+            {{ end }}
+        </div>
+    </div>
+
+</div>
+{{end}}

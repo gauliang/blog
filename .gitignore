@@ -1,0 +1,14 @@
+# Hugo default output directory
+/resources
+/gauliang.github.io
+
+## OS Files
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# OSX
+.DS_Store
+

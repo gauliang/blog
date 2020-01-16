@@ -1,0 +1,27 @@
+{{ define "main" }}
+
+{{ if ne .Kind "section" }}
+<header class="list-header">
+    <div class="container">
+        <h1 class="list-title">{{ .Name }}</h1>
+        <!-- <div class="post-time">
+            {{ .Date.Format "Jan 2, 2006" }} by {{ .Params.author }}
+        </div> -->
+    </div>
+</header>
+{{ end }}
+
+<main class="page-list">
+    <div class="container page-main">
+        <div class="row">
+            {{ range .Paginator.Pages }}
+            <div class="col-md-12">
+                {{ .Render "summary"}}
+            </div>
+            {{ end }}
+        </div>
+        {{ template "_internal/pagination.html" . }}
+    </div>
+</main>
+
+{{ end }}

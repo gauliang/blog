@@ -1,0 +1,35 @@
+<div class="hero">
+  <div class="container">
+    <div class="row">
+      <div class="col-xl-6">
+        <ul class="hero-tags">
+          <!-- {{.Site.Taxonomies.tags.building.Count}} -->
+
+          {{ $tags := .Site.Taxonomies.tags }}
+          {{ $data := .Data }}
+          {{ range $key, $value := .Site.Data.tagmeta.data }}
+          <li>
+            {{ $tag := index $tags (lower $value.identifier) }}
+            <a href="/tags/{{ $value.identifier | urlize }}">
+              <div class="icon">
+                {{ if $value.isImage }}
+                <img src="{{ $value.icon }}">
+                {{ else }}
+                <i class="{{ $value.icon }}"></i>
+                {{ end }}
+              </div>
+              <div class="text">
+                <div class="caption">{{ $tag.Count }}</div>
+                <div class="title">{{ $value.name }}</div>
+              </div>
+              <label for=""></label>
+              <span class="number"></span>
+            </a>
+          </li>
+          {{ end }}
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="hero-svg" id="hero-svg"></div>
+</div>

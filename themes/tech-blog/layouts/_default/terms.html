@@ -1,0 +1,19 @@
+{{define "main"}}
+
+<div class="container">
+    {{ $data := .Data }}
+    <ul class="tags-terms">
+
+        {{ range $key,$value := .Data.Terms.ByCount }}
+        <li>
+            <a href="{{ "/" | absLangURL }}{{ $data.Plural }}/{{ $value.Name | urlize }}">
+                <i class="ti-new-window"></i>
+                <span class="count">{{ $value.Count }}</span>
+                <div class="name">{{ $value.Name }}</div>
+            </a>
+        </li>
+        {{ end }}
+    </ul>
+</div>
+
+{{end}}

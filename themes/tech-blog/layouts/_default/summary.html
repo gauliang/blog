@@ -1,0 +1,35 @@
+<div class="post">
+    <div class="post-meta post-time">
+        # {{ .Date.Format "Jan 2, 2006" }}
+        <i class="post-line"></i>
+    </div>
+
+    <div class="row">
+        {{ if .Params.cover }}
+        
+        <div class="col-lg-5">
+            <div class="post-photo">
+                <a class="post-link" href="{{ .Permalink }}">
+                    <img src="/{{add .File.Dir .File.ContentBaseName}}.files/{{ .Params.Cover }}" alt="">
+                </a>
+            </div>
+        </div>
+        {{ end }}
+        <div class="{{ if .Params.cover }}col-lg-7{{else}}col-lg-12{{end}}">
+            <h2 class="post-title">
+                <a class="post-link" href="{{ .Permalink }}">
+                    {{ .Title }} {{ if .Draft }}(draft){{end}}
+                </a>
+            </h2>
+
+            <p class="post-summary">{{ .Description }}</p>
+
+            <p class="post-meta post-tag">
+                <i class="ti-tag"></i>
+                {{ range $i, $e := .Params.tags }}
+                <a href="{{ $.Site.BaseURL }}{{ $.Site.LanguagePrefix }}tags/{{ . }}">{{ . }}</a>
+                {{ end }}
+            </p>
+        </div>
+    </div>
+</div>
