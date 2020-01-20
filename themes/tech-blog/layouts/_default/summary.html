@@ -27,7 +27,7 @@
             <p class="post-meta post-tag">
                 <i class="ti-tag"></i>
                 {{ range $i, $e := .Params.tags }}
-                <a href="{{ $.Site.BaseURL }}{{ $.Site.LanguagePrefix }}tags/{{ . }}">{{ . }}</a>
+                <a href="{{ $.Site.BaseURL }}/tags/{{ . }}">{{ . }}</a>
                 {{ end }}
             </p>
         </div>
