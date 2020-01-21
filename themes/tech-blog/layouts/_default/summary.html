@@ -27,7 +27,7 @@
             <p class="post-meta post-tag">
                 <i class="ti-tag"></i>
                 {{ range $i, $e := .Params.tags }}
-                <a href="{{ $.Site.BaseURL }}/tags/{{ . }}">{{ . }}</a>
+                <a href="{{ $.Site.BaseURL }}/tags/{{ .  | urlize }}">{{ . }}</a>
                 {{ end }}
             </p>
         </div>
