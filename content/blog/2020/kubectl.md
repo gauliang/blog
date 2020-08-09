@@ -1,6 +1,6 @@
 ---
 title: "安装和配置 kubectl & istioctl"
-date: 2020-01-21T23:20:31+08:00
+date: 2020-08-09T11:13:31+08:00
 draft: false
 Description: "本文整理记录 ubuntu 操作系统上常见问题处理说明。"
 type: "posts"    # posts | series
