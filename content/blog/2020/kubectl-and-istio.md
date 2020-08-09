@@ -4,7 +4,7 @@ date: 2020-08-09T11:13:31+08:00
 draft: false
 Description: "本文整理记录 ubuntu 操作系统上常见问题处理说明。"
 type: "posts"    # posts | series
-tags: ["cloudnative", "linux", "kubectl","istioctl"]
+tags: ["cloudnative", "linux", "kubernetes","service-mesh"]
 series: []
 author: "Gl"
 cover: ""     # image name
