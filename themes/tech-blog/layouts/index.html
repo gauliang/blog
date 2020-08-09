@@ -5,7 +5,7 @@
 <div class="container page-main">
 
     <div class="row">
-        {{ range first 5 .Site.RegularPages.ByDate.Reverse }}
+        {{ range first 15 .Site.RegularPages.ByDate.Reverse }}
         {{ if eq .Type "posts" }}
         <div class="col-md-12">
             {{ .Render "summary"}}
