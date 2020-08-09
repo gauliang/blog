@@ -7,7 +7,7 @@ type: "posts"    # posts | series
 tags: ["cloudnative", "linux", "kubectl","istioctl"]
 series: []
 author: "Gl"
-cover: "cover.jpg"     # image name
+cover: ""     # image name
 ---
 
 ## 一、Kubectl
