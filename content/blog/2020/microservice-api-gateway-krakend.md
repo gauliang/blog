@@ -12,8 +12,7 @@ cover: false     # image name
 
 KrakenD 是用 Go 编写的开源高性能无状态、分布式、微服务 API 网关，其不仅可以轻松将客户端请求转发到后端服务，还具备强大的数据处理功能，支持转换、过滤、聚合和修剪来自后端服务甚至第三方服务的返回数据，从而消除处理多个 REST 服务的必要性，使客户端与微服务的实现细节隔离开来。这一切通过简单的配置即可实现，本文介绍 KrakendD 如何安装部署并快速投入应用。
 
-
-![](../microservice-api-gateway-kraken.files/KrakendFlow.png)
+![KrakendFlow](../microservice-api-gateway-kraken.files/KrakendFlow.png)
 
 ## KrakenD 概述
 
@@ -85,7 +84,6 @@ $ krakend check --config ./krakend.toml --debug
 ```
 
 上述配置，声明端点 `/v1/foo-bar` 对应两个后端服务，当客户端请求 `/v1/foo-bar` 端点，网关将返回合并后的 `/foo` 和 `/bar` 服务的结果。
-
 
 **4、`extra_config` 结构**
 
