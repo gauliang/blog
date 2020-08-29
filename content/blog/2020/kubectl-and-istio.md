@@ -95,7 +95,7 @@ brew install istioctl
 source ~/_istioctl
 ```
 
-## 参考
+## 三、参考
 
 1. <https://kubernetes.io/docs/tasks/tools/install-kubectl/#optional-kubectl-configurations>
 1. <https://istio.io/latest/docs/ops/diagnostic-tools/istioctl/#istioctl-auto-completion>
