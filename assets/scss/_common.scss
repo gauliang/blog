@@ -188,6 +188,10 @@
   }
 }
 
+
+
+
+
 .post-related {
   list-style: none;
   padding: 0;
@@ -246,6 +250,21 @@
 
   .nav-link.active {
     color: $primary-color;
+  }
+}
+
+.table-of-contents.in-content {
+  position: inherit;
+  top: 0;
+  width: auto;
+  font-size: 16px;
+  &::before {
+    content: "TOC";
+  }
+  li{ line-height: 2em;}
+
+  a {
+    color: #007bff;
   }
 }
 
