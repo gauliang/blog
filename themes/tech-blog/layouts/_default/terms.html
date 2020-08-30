@@ -1,5 +1,14 @@
 {{define "main"}}
 
+<header class="list-header">
+    <div class="container">
+        <h1 class="list-title">{{ .Name }}</h1>
+        <div class="post-time">
+            Last-Modified at {{ .Date.Format "Jan 2, 2006" }} by {{ .Params.author }} GL
+        </div>
+    </div>
+</header>
+
 <div class="container">
     {{ $data := .Data }}
     <ul class="tags-terms">
