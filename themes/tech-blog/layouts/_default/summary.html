@@ -1,14 +1,13 @@
 <div class="post">
     <div class="post-meta">
         <div class="post-time">
-            {{ .Date.Format "Jan 2, 2006" }}
-        <i class="post-line"></i>
+            # {{ .Date.Format "Jan 2, 2006" }}
+            <i class="post-line"></i>
         </div>
     </div>
 
     <div class="row">
         {{ if .Params.cover }}
-        
         <div class="col-lg-5">
             <div class="post-photo">
                 <a class="post-link" href="{{ .Permalink }}">
