@@ -4,15 +4,22 @@
     box-shadow: 0 2px 5px rgba(10, 10, 10, 0.1);
     border-bottom: 1px solid #eee;
     position: relative;
-    z-index: 5;
+    z-index: 15;
     height: 70px;
+    @media (max-width:575px) {
+        height: auto;
+    }
 
     .navbar {
+        background-color: #FFF;
         padding: 0;
-        
-
+        @media (max-width:575px) {
+            margin-left: -15px;
+            margin-right: -15px;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
         .navbar-brand {
-            // background-image: $background-image;
             height: 50px;
             width: 60px;
             border-radius: 5px;
@@ -22,7 +29,7 @@
             padding: 0;
             font-weight: bolder;
             font-size: 26px;
-            svg,img{display: block; position: absolute; width: 70px; height: 70px; bottom: -10px;}
+            svg,img{display: block; position: absolute; width: 70px; height: 70px;}
         }
 
         .navbar-nav {
@@ -42,14 +49,15 @@
                 &.active::after {
                     content: " ";
                     position: absolute;
-                    width: 100%;
                     border-bottom: 3px solid $primary-color;
-                    bottom: -11px;
+                    left: 15px;
+                    right: 15px;
+                    bottom: 5px;
                 }
             }
             @media (max-width:991px) {
-                border-top: 1px solid #ddd;
-                margin-top: 15px;
+                margin-top: 30px;
+                padding: 15px;
                 .nav-item.active::after {content: none;}
             }
 
@@ -60,10 +68,11 @@
 }
 
 .hero {
-    // background-image: $background-image;
-    background-color: #673ab7;
-    // background-image: url('https://www.digitalocean.com/assets/media/homepage/bg-home-1-d54581d7.jpg');
-    padding: 60px 0;
+    background-color: #3c3d77;
+    background-image: $background-image;
+    background-size: cover;
+    background-position: center bottom;
+    padding: 80px 0;
     position: relative;
 
     .hero-svg{
@@ -71,12 +80,11 @@
         top: 0;
         bottom: 0;
         left: 0;
-        right: 0;
-
-        
+        right: 0;        
     }
 
     ul.hero-tags {
+        height: 100%;
         position: relative;
         z-index: 10;
         margin: 0;
@@ -84,7 +92,7 @@
         list-style: none;
         display: flex;
         flex-flow: row wrap;
-        align-content: flex-start;
+        align-content: center;
 
         li {
             margin: 5px;
@@ -137,4 +145,34 @@
         }
     }
 
+}
+
+.wisdom{
+    margin: 5px;
+    color: #c3e3ff;
+    display: none;
+    font-family: monospace;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+    .wisdom-content{
+        padding: 2rem;
+        background-color: rgba($color: #000000, $alpha: 0.1);
+        font-size: 18px;
+        position: relative;
+        border-radius: 5px;
+        line-height: 2rem;
+    }
+    .wisdom-about{
+        margin-top: 1rem;
+        text-align: right;
+        font-style: italic;
+        &::before{
+            content: "————";
+            margin-right: 1rem;
+        }
+    }
+    &.loaded{
+        display: flex;
+    }
 }
