@@ -140,3 +140,22 @@ $(function () {
     }
 
 }()
+
++function(){
+    var random = function(quotes){
+        return quotes[Math.floor(Math.random() * quotes.length + 0)]
+    }
+    $.ajax({
+        url:'/js/albert-einstin-quotes.json',
+        type:'GET',
+        dataType:"json",
+        success:function(data){
+            var quotes = $('.wisdom');
+            var content = quotes.find('.wisdom-content')
+            var about = quotes.find('.wisdom-about')
+            content.text(random(data.quotes))
+            about.text('Albert Einstein')
+            quotes.addClass('loaded');
+        }
+    })
+}()
