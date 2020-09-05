@@ -2,12 +2,12 @@
 title: "Javascript 编写高质量箭头函数"
 date: 2020-09-05T10:51:40+08:00
 draft: false
-Description: ""
+Description: "箭头函数的语法简洁明了，非常适合作为回调使用。本文介绍 5 中关于箭头函数的最佳实践。"
 type: "posts"    # posts | series
 tags: [javascript, arrow-function,best-practices]
 series: []
 author: "Gl"
-cover: false     # image name
+cover: "javascript-arrow-function-best-practices.jpg"     # image name
 ---
 
 > 译自 [5 Best Practices to Write Quality Arrow Functions](https://dmitripavlutin.com/javascript-arrow-functions-best-practices/)
