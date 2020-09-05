@@ -18,7 +18,16 @@ Webpack 正是这样一个工具，接下来将深入探索这些功能，以优
 
 ## Webpack 是什么
 
-简单说，webpack只是一个模块打包器，他将模块间的依赖关系图优化成一个 chunk 图。
+简单说，webpack 是一个模块打包器，他将模块间的依赖关系图优化成一个 chunk 图。
+
+### Javascript 模块系统比较
+
+| ---        | AMD              | CommonJS         | ESM                      |
+|------------|------------------|------------------|--------------------------|
+| Analyzable | With limitations | With limitations | Yes                      |
+| Resolving  | Asynchronous     | Synchronous      | Implementation specific  |
+| Linking    | Copy by value    | Copy by value    | Live binding             |
+| Scoping    | Function wrapper | Function wrapper | New language environment |
 
 ## 热重载
 
