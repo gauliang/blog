@@ -2,19 +2,22 @@
 title: "简述 Javascript 模块化规范"
 date: 2020-09-05T16:04:37+08:00
 draft: false
-Description: ""
+Description: "当我们提及**模块化**时，通常意味着是由一组高度分离的，不同的功能块存储在模块中组成的。在可能的情况下，通过松散耦合消除依赖关系简化应用程序的可维护性。
+本文概述集中流行的模块化规范，以便在不同应用场景中能够快速决策选型。"
 type: "posts"    # posts | series
 tags: [javascript, node.js, CommonJS, esm, amd, umd]
 series: []
 author: "Gl"
-cover: false     # image name
+cover: '001.jpg'     # image name
 ---
 
-ESM 具有语法简单、异步等特性。UMD 随处可见，通常在不支持 ESM 的环境中作为备用。CJS是同步的，适合后端。AMD是异步的，适合前端。
+当我们提及**模块化**时，通常意味着是由一组高度分离的，不同的功能块存储在模块中组成的。在可能的情况下，通过松散耦合消除依赖关系简化应用程序的可维护性。
+本文概述集中流行的模块化规范，以便在不同应用场景中能够快速决策选型。ESM 具有语法简单、异步等特性。UMD 随处可见，通常在不支持 ESM 的环境中作为备用。
+CJS是同步的，适合后端。AMD是异步的，适合前端。
 
 ## CommonJS
 
-CommonJS 由 Node.js 实现，同步导入模块CJS，主要用于服务器端，无法在浏览器中直接运行。
+CommonJS 是同步导入，主要用于服务器端，无法在浏览器中直接运行。
 导入 CJS 时，它将为你提供导入对象的副本。不支持 Tree-shaking，因为在导入时会得到一个对象。
 循环依赖管理不善。
 
@@ -95,3 +98,6 @@ export const function2() {...};
 
 <https://www.freecodecamp.org/news/anatomy-of-js-module-systems-and-building-libraries-fadcd8dbd0e/>
 <https://irian.to/blogs/what-are-cjs-amd-umd-and-esm-in-javascript/>
+<http://www.commonjs.org/>
+<https://requirejs.org/>
+<https://addyosmani.com/writing-modular-js/>

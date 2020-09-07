@@ -28,4 +28,4 @@ data:
 - icon: "images/node-dot-js.svg"
   isImage: true
   name: "Node.js"
-  identifier: "NodeJs"
+  identifier: "Node.Js"
