@@ -1,10 +1,10 @@
 ---
-title: "Javascript 箭头函数最佳实践"
+title: "Javascript 箭头函数最佳实践[译]"
 date: 2020-09-05T10:51:40+08:00
 draft: false
 Description: "箭头函数的语法简洁明了，非常适合作为回调使用。本文介绍 5 中关于箭头函数的最佳实践。"
 type: "posts"    # posts | series
-tags: [javascript, arrow-function,best-practices]
+tags: [javascript, node.js, arrow-function,best-practices]
 series: []
 author: "Gl"
 cover: "javascript-arrow-function-best-practices.jpg"     # image name
@@ -12,19 +12,19 @@ cover: "javascript-arrow-function-best-practices.jpg"     # image name
 
 {{< image src="javascript-arrow-function-best-practices.jpg" alt="Javascript 箭头函数最佳实践">}}
 
-> 译自 [5 Best Practices to Write Quality Arrow Functions](https://dmitripavlutin.com/javascript-arrow-functions-best-practices/)
+> 英文原文： [5 Best Practices to Write Quality Arrow Functions](https://dmitripavlutin.com/javascript-arrow-functions-best-practices/)
 
-箭头函数的语法简洁明了，非常适合作为回调使用。本文介绍 5 中关于箭头函数的最佳实践。
+箭头函数的语法简洁明了，非常适合作为回调使用，这里介绍 5 个有关箭头函数的最佳实践。
 
 ## 一、箭头函数名称推断
 
-JS 中的箭头函数 name 值是一个空字符串。在调试会话或调用堆栈分析期间箭头函数被标记为 anonymous（匿名函数），没有任何有关正在执行的代码的线索。
+JS 中的箭头函数 name 值是一个空字符串，在调试会话或调用堆栈分析期间箭头函数被标记为 anonymous（匿名函数）。
+通过函数名称推断（ES2015 的功能）可以在某些条件下检测到函数名称。
 
 ```javascript
 ( number => number + 1 ).name; // => ''
 ```
 
-幸运的是，函数名称推断（ES2015 的功能）可以在某些条件下检测到函数名称。
 名称推断的思想是 JavaScript 可以从其语法位置确定箭头函数名称：例如，从保存函数对象的变量名称确定。
 
 ```javascript
@@ -101,7 +101,7 @@ array.map(number => ({
 
 **建议：** 在内联箭头函数中使用时，将对象字面量包装在一对括号中。
 
-## 五、注意过多的嵌套
+## 五、避免过多的嵌套
 
 箭头函数的语法很短，很好。但是，副作用是，当许多箭头函数嵌套时，它可能会变得难以阅读。
 让我们考虑以下情形。单击按钮后，将启动对服务器的请求。响应准备就绪后，将各项信息打印到到控制台：

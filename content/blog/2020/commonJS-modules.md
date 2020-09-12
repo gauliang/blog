@@ -2,7 +2,7 @@
 title: "CommonJS Modules"
 date: 2020-09-06T10:19:40+08:00
 draft: false
-Description: "在 ES2015 标准之前，JavaScript语言没有模块化组织代码的原生方法。Node.js 用 CommonJS 模块格式填补了这一空白。 CommonJS 规范了如何编写模块，以及如何在模块系统之间实现互操作。由于其同步执行特性，CMD 主要用于服务端开发，也可通过打包工具处理后用在浏览器端。"
+Description: "在 ES2015 标准之前，JavaScript语言没有模块化组织代码的原生方法，CommonJS 模块格式填补了这一空白。 CommonJS 规范了如何编写模块，以及如何在模块系统之间实现互操作。由于其同步执行特性，CMD 主要用于服务端开发，也可通过打包工具处理后用在浏览器端。"
 type: "posts"    # posts | series
 tags: ['javascript','node.js','commonjs']
 series: []
@@ -12,8 +12,10 @@ cover: '001.jpg'     # image name
 
 {{< image src="001.jpg" alt="CommonJS Modules">}}
 
-在 ES2015 标准之前，JavaScript语言没有模块化组织代码的原生方法。Node.js 用 CommonJS 模块格式填补了这一空白。
-CommonJS 规范了如何编写模块，以及如何在模块系统之间实现互操作。由于其同步执行特性，CMD 主要用于服务端开发，也可通过打包工具处理后用在浏览器端。
+在 ES2015（也被称为ES6） 标准之前，JavaScript语言没有模块化组织代码的原生方法，CommonJS 模块格式填补了这一空白。
+CommonJS 规范了如何编写模块，以及如何在模块系统之间实现互操作。由于其同步执行特性，CMD 主要用于服务端开发。
+
+> _本文代码范例均基于 Node.js (Node.js 模块基于该规范略有不同)。_
 
 ## 模块规范
 
@@ -110,3 +112,7 @@ in a, b.done = true
 a done
 in main, a.done = true, b.done = true
 ```
+
+## 总结
+
+CommonJS 定义了模块格式，但它在定义时似乎并未考虑有关浏览器环境中的情况，因此，你不能在网页中直接使用 commonjs 模块，需要先通过 webpack 之类的工具进行打包处理。
