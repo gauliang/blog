@@ -82,7 +82,7 @@ pre code{background-color: initial; padding:initial;}
     // box-shadow: $box-shadow;
     box-shadow:0 0 15px 0 rgba(10,10,10,.4);
     background-color: #343a40 !important;
-    border-radius: 3px;
+    border-radius: 3px 0 3px 3px;
     overflow: hidden;
     transition: all 0.3s !important;
     pre{margin-bottom: 0; overflow: visible;}
@@ -104,3 +104,31 @@ pre code{background-color: initial; padding:initial;}
     }
 }
 
+
+.highlight code::after {
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 5px 6px 2px 6px;
+    font-size: 12px;
+    border-radius: 0 0 0 3px;
+    line-height: 1em;
+    background: #ffffff;
+    text-transform: uppercase;
+    color: #343a40;
+}
+.highlight code.language-js::after ,.highlight code.language-javascript::after {
+    content: "javascript";
+    background: #FFE70B;
+    color: #2c251b;
+}
+.highlight code.language-bash::after {
+    content: "bash";
+    background-color: #2196f3;
+    color:#FFF;
+}
+.highlight code.language-html::after {
+    content: "html";
+    background-color: #d62;
+    color:#FFF;
+}

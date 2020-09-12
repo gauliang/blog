@@ -10,13 +10,13 @@
 </header>
 <div class="container">
     <div class="row">
-        <div class="col-xl-2 d-none d-xl-block">
+        <div class="col-xl-2 col-lg-3 d-none d-xl-block d-lg-block">
             <div class="table-of-contents" id="table-of-contents">
                 {{ $bootstrapToc := replaceRE "</a>\\s*<ul[\\s\\S]+?</ul>" "</a>" (replaceRE "<a" "<a class=\"nav-link\" " .TableOfContents) }}
                 {{ safeHTML $bootstrapToc}}
             </div>
         </div>
-        <div class="col-xl-8 post-content">
+        <div class="col-xl-8 col-lg-9 post-content">
             <div class="post-meta-count">
                 <i class="ti-info-alt"></i>
                 <strong>阅读全文约需 {{ add 1 (div .WordCount 120) }} 分钟</strong>
