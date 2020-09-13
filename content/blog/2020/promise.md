@@ -1,13 +1,13 @@
 ---
-title: "Promise"
+title: "Javascript Promise"
 date: 2020-09-13T20:00:24+08:00
 draft: false
 Description: "Promise 对象用于表示一个异步操作的最终完成 (或失败), 及其结果值。本质上 Promise 是一个函数返回的对象，我们可以在它上面绑定回调函数，这样我们就不需要在一开始把回调函数作为参数传入这个函数了。"
 type: "posts"    # posts | series
-tags: []
+tags: [javascript,node.js,promise]
 series: []
 author: "Gl"
-cover: false     # image name
+cover: '001.jpg'     # image name
 ---
 
 JavaScript 是单线程工作，这意味着两段脚本不能同时运行，而是必须一个接一个地运行。
