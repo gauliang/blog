@@ -29,12 +29,10 @@ sudo apt install gnome-tweaks
 gnome-tweaks
 ```
 
-
-
 安装 GNOME Shell Extension **Hide Top Bar** 可配置自动隐藏桌面顶部状态栏。
 
 ## 二、开发环境配置
 
 ### 1. 安装 Nodejs
 
-参考 https://github.com/nodejs/help/wiki/Installation 下载二进制文件完成安装。
+参考 <https://github.com/nodejs/help/wiki/Installation> 下载二进制文件完成安装。

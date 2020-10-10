@@ -24,7 +24,6 @@ data:
   name: "DevOps"
   identifier: "devops"
 
-
 - icon: "images/node-dot-js.svg"
   isImage: true
   name: "Node.js"
