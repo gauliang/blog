@@ -357,7 +357,7 @@
     padding-bottom: 1rem;
     margin-top: -1rem;
     margin-bottom: 1rem;
-    border: 1px solid #FFF;
+    border: 1px solid #EEE;
     border-radius: 3px;
 
     &,
@@ -522,7 +522,7 @@
 
   .image-widget{
     background-color: #f8f9fa; border-radius: 3px;
-    img{ display: block;}
+    img{ display: block; width: 100%;}
     figcaption{padding: 1.25rem 2.5rem; text-align: center; font-size: .8rem;}
   }
 }
@@ -614,4 +614,8 @@
       }
     }
   }
+}
+
+.codepen-widget{
+
 }
