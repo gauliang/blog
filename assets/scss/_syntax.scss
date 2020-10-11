@@ -1,7 +1,8 @@
 code{
-    background-color: #007bff14;
-    color: #607d8b;
+    background-color: #3333ff15;
+    color: #33d;
     padding: 2px 5px;
+    border-radius: 2px;
 }
 pre code{background-color: initial; padding:initial;}
 /* Background */ .chroma { color: #f8f8f2; background-color: #343a40 }
@@ -118,7 +119,7 @@ pre code{background-color: initial; padding:initial;}
     color: #343a40;
 }
 .highlight code.language-js::after ,.highlight code.language-javascript::after {
-    content: "javascript";
+    content: "js";
     background: #FFE70B;
     color: #2c251b;
 }

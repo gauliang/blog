@@ -10,7 +10,8 @@ author: "Gl"
 cover: '001.jpg'     # image name
 ---
 
-ES6 中首次内置了对模块的支持。从理论上讲，ECMAScript模块应该在所有JavaScript环境中通用。实际上，浏览器仍然是ES模块的主要目标。
+ES6 中首次内置了对模块的支持。从理论上讲，ECMAScript 模块应该在所有 JavaScript 环境中通用。实际上，浏览器仍然是ES模块的主要目标。
+默认情况下，模块具有[严格模式](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode)。
 
 ## 一、export 语法
 
@@ -122,6 +123,11 @@ import(`./${path}/modules.mjs`)
         /* error */
     })
 ```
+
+### import.meta
+
+另一个与模块相关的新功能是import.meta，它提供有关当前模块的元数据。您获得的确切元数据不在 ECMAScript 规范中，取决于主机环境。
+例如，在浏览器中，您可能会获得与 Node.js 不同的元数据。
 
 ## 五、在浏览器中使用
 
