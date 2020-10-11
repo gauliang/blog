@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Gitlab CE Work Flow - Gauliang</title>
+
+<link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="/vendor/themify-icons/themify-icons.css">
+
+
+<link rel="stylesheet" href="https://gauliang.github.io/scss/main.min.9df1a70ef88529daeadaac5364f3e8ba413d79349e3316a50cc692e170771b5f.css"><body data-spy="scroll" data-target="#table-of-contents"><header class="navigation" id="navigation">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg">
+            <a class="navbar-brand" href="/">
+                <img src="/logo.svg" alt="Gl">
+            </a>            
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="ti-menu"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">                    
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    
+                    
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/blog/">
+                            <span>博客</span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/series/">
+                            <span>系列</span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/tags/">
+                            <span>Tags</span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+            </div>
+        </nav>
+    </div>
+</header><div id="content">
+
+<header class="post-header">
+    <div class="container">
+        <h1 class="post-title">Gitlab CE Work Flow</h1>
+        <div class="post-time">
+            Aug 29, 2020 by Gauliang
+        </div>
+    </div>
+</header>
+<div class="container">
+    <div class="row">
+        <div class="col-xl-2 col-lg-3 d-none d-xl-block d-lg-block">
+            <div class="table-of-contents" id="table-of-contents">
+                
+                <nav id="TableOfContents">
+  <ul>
+    <li><a class="nav-link"  href="#一认领-issue">一、认领 issue</a></li>
+    <li><a class="nav-link"  href="#二开发">二、开发</a></li>
+    <li><a class="nav-link"  href="#三创建-mr">三、创建 MR</a></li>
+    <li><a class="nav-link"  href="#四代码审查">四、代码审查</a></li>
+    <li><a class="nav-link"  href="#五完成">五、完成</a></li>
+  </ul>
+</nav>
+            </div>
+        </div>
+        <div class="col-xl-8 col-lg-9 post-content">
+            <div class="post-meta-count">
+                <i class="ti-info-alt"></i>
+                <strong>阅读全文约需 2 分钟</strong>
+            </div>
+            <article id="post-content">
+
+                
+                <p>本系列文章旨在整理和规范 Gitlab-CE 在团队协作中的最佳应用建议。内容将覆盖工作流规范、CI、CD、WebHooks、ChatOps、Gitlab API、基础运维等。</p>
+<h2 id="一认领-issue">一、认领 issue</h2>
+<ol>
+<li>在项目仓库首页依次打开左侧菜单 Issues / Boards，进入看板页面；</li>
+<li>左侧 Open 列表中单击待认领的 Issue，在弹出的 Issue 信息面板中， 将其 Assigness 到自己名下。部分 Issue 会在创建时直接 Assigness 到相关人员，此时则无需再次 Assigness 操作；</li>
+<li>把当前 Issue 从左侧 Open 列表移动到 To Do 列表；</li>
+</ol>
+<blockquote>
+<p>注：完成上述操作，页面右上角 To-Do 列表任务数将会加一。</p>
+</blockquote>
+<h2 id="二开发">二、开发</h2>
+<ol>
+<li>创建分支，打开 Issue 页面，点击 <strong>Create merge request</strong> 按钮右侧下拉箭头，选择  Create branch，输入分支名称，创建分支。</li>
+<li>拉取新创建的分支到本地，开始开发工作。</li>
+<li>完成开发后，Push 当前分支代码到 Git 服务端。</li>
+</ol>
+<h2 id="三创建-mr">三、创建 MR</h2>
+<ol>
+<li>仓库首页打开 Merge Requests 页面，点击 <strong>New merge request</strong> 按钮。</li>
+<li>选择源分支以及要合并的目标分支，点击 <strong>Compare branches and continue</strong>。</li>
+<li>MR 描述，在&rsquo;Closes #{branch-id}&lsquo;之后空出一行，输入当前 MR 相关的描述信息。
+<code>Close #{branch-id}</code> 会确保分支合并后自动关闭相关 Issue，<code>/done</code>确保分支合并后更新 Issue 的 Doing 标签为 Done。
+更多 Quick Actions 请参考 <a href="https://gitlab.com/help/user/project/quick_actions.md">GitLab Quick Actions</a></li>
+<li>Assignee 参与代码审查的人员。如果需要更多人参与评审，可在MR创建完成后，在其评论区 <strong>AT 具体人名</strong>参与评审。</li>
+<li>在 Merge options 处，选中 <code>Delete source branch when merge request is accepted</code>。如果要在合并到 master 时
+压缩 commit 记录，可以选中  <code>Squash commits when merge request is accepted</code>。</li>
+<li>Submit merge request 提交</li>
+</ol>
+<h2 id="四代码审查">四、代码审查</h2>
+<ol>
+<li>仓库首页打开 Merge Requests ，列出全部 MR 清单，或通过页面右上角的 <code>Merge requests</code> 按钮打开一个仅包含需要你进行代码审查的MR清单。</li>
+<li>选择并打开需要 Review 的 MR 。在 Discussion 界面可以进行沟通，Commits 界面查看当前 MR 源分支上的所有提交，Changes 界面查看
+当前 MR 源分支与目标分支的变更对比。</li>
+<li>在Changes界面可以通过代码行号左侧的讨论图标对代码提出修改意见，这些修改意见的总数量会在 Changes 页面的 Tab 菜单右侧展示。浏览所有变更
+文件，并提出修改意见。</li>
+<li>针对 Review 中提出的问题，开发人员需在MR源分支上进行处理，处理后提交分支代码到服务器，在评论区**@ 相关审查人员**继续进行代码评审。</li>
+<li>审查人员再次对分支代码进行评审，将已经处理好的修改意见标记为 resolved，参考步骤[3]，对于新出现的问题继续提出修改意见。</li>
+<li>循环执行上述步骤 [4-5]，直至分支代码完全符合合并要求。</li>
+<li>当 Review 中提出的所有修改意见，全部被标记为 resolved 之后，在 Discussion 界面<strong>回复 <code>/LGTM</code> 并 AT Master 分支管理员</strong>。</li>
+<li>只要满足上述条件，CI 机器人或 Master 管理员会合并MR源分支到目标分支（Master），合并后，相关MR源分支自动删除，issue自动关闭。</li>
+</ol>
+<h2 id="五完成">五、完成</h2>
+<ol>
+<li>更新 issue 上的 Doing 标签为 Done。</li>
+</ol>
+
+            </article>
+
+            <div class="post-tag">
+                <strong>Tags:</strong>
+                
+                
+                <a href="https://gauliang.github.iotags/devops">devops</a>
+                
+                 / 
+                <a href="https://gauliang.github.iotags/gitlab">gitlab</a>
+                
+            </div>
+
+
+            <div class="next-and-prev-post">
+                
+                <a href="https://gauliang.github.io/blog/2020/kubectl-and-istio/" class="prev-post">
+                    <i class="icon ti-arrow-left"></i>
+                    <div class="text">
+                        <div class="caption">2020-08-09 11:13:31</div>
+                        <div class="title">安装和配置 kubectl &amp; istioctl</div>
+                    </div>
+                </a>
+                
+                
+                <a href="https://gauliang.github.io/blog/2020/javascript-arrow-function-best-practices/" class="next-post">
+                    <div class="text">
+                        <div class="caption">2020-09-05 10:51:40</div>
+                        <div class="title">Javascript 箭头函数最佳实践[译]</div>
+                    </div>
+                    <i class="icon ti-arrow-right"></i>
+                </a>
+                
+            </div>
+
+        </div>
+        <div class="col-xl-2 d-none d-xl-block">
+            
+            
+        </div>
+    </div>
+
+</div>
+
+        </div><footer class="page-footer">
+    <div class="container">
+        <div class="copyright">
+            <pre><code>$ echo "simple things scale." </code></pre>
+            <ul>
+                <li><a href="https://gauliang.github.io">Home page</a></li>
+                <li><a href="https://gauliang.github.io"><i class="ti-info-alt"></i> about</a></li>
+                <li><a href="https://github.com/gauliang" target="_blank"><i class="ti-github"></i> GitHub</a></li>
+            </ul>
+        </div>
+    </div>
+</footer>
+
+<a id="scroll-to-top" href="javascript:void(0);">Scroll to top</a>
+
+<script src="/vendor/jquery/jquery-3.4.1.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="/vendor/svgjs/svg.min.js"></script>
+<script src="/js/javascript.js"></script></body>
+</html>

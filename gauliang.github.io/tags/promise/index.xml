@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>promise on Gauliang</title>
+    <link>https://gauliang.github.io/tags/promise/</link>
+    <description>Recent content in promise on Gauliang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Sun, 13 Sep 2020 20:00:24 +0800</lastBuildDate>
+    
+	<atom:link href="https://gauliang.github.io/tags/promise/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Javascript Promise</title>
+      <link>https://gauliang.github.io/blog/2020/promise/</link>
+      <pubDate>Sun, 13 Sep 2020 20:00:24 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/promise/</guid>
+      <description>JavaScript 是单线程工作，这意味着两段脚本不能同时运行，而是必须一个接一个地运行。 操作其中一项任务会延迟其他任务。您可能已使用事件和回调来解决该问题。 Promise 有点类似于事件侦听器，但有以下两点区别：
+ promise 只能成功或失败一次， 而不能成功或失败两次，也不能从成功转为失败或从失败转为成功。 如果 promise 已成功或失败，且您之后添加了成功/失败回调，则将会调用正确的回调，即使事件发生在先也是如此。  Promise 对象用于表示一个异步操作的最终完成 (或失败), 及其结果值。 本质上 Promise 是一个函数返回的对象，我们可以在它上面绑定回调函数，这样我们就不需要在一开始把回调函数作为参数传入这个函数了。
+概述 Promise 构造函数包含一个参数，该参数是带有 resolve（解析）和 reject（拒绝）两个参数的回调。在回调中执行一些操作（例如异步），如果一切都正常，则调用 resolve，否则调用 reject。
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16  var promise = new Promise(function(resolve, reject) { // do a thing, possibly async, then…  if (/* everything turned out fine */) { resolve(&amp;#34;Stuff worked!&amp;#34;); } else { reject(Error(&amp;#34;It broke&amp;#34;)); } }); promise.</description>
+    </item>
+    
+  </channel>
+</rss>

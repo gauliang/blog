@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>docker on Gauliang</title>
+    <link>https://gauliang.github.io/tags/docker/</link>
+    <description>Recent content in docker on Gauliang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Wed, 22 Jan 2020 16:32:22 +0800</lastBuildDate>
+    
+	<atom:link href="https://gauliang.github.io/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>在 Linux 和 Windows 平台安装 Docker CE</title>
+      <link>https://gauliang.github.io/blog/2020/install-docker-engine/</link>
+      <pubDate>Wed, 22 Jan 2020 16:32:22 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/install-docker-engine/</guid>
+      <description>Docker 是一个用于开发、交付和运行应用程序的开放平台。Docker 使您能够将应用程序与基础架构分开，以与管理应用程序相同的方式来管理基础架构，从而快速交付软件。通过利用 Docker 快速交付、测试和部署代码的方法，您可以大大缩短编写代码和在生产环境中运行代码之间的时间。
+Windows 系统安装 windows10 操作系统自带 windows hyper-v 可以非常方便的运行 Docker。 在 windows7 系统上则稍微复杂一点，需通过安装 Docker-Toolbox 来使用 Docker（用 Oracle virtualbox 来取代 Hyper-V）。
+ windows 10 安装 Docker for Windows Installer windows 7 安装 Docker Toolbox  安装完成后，要启动 Docker 请从开始菜单打开 Docker for Winodws，window7 系统需打开 Kitematic，Kitematic 提供直观的图形用户界面来运行 Docker 容器。
+虽然在 windows7 平台通过 DockerToolbox 可以正常运行 Docker，但使用体验一般，建议迁移到 Linux 平台，debian / ubuntu / fedora 等都是不错的选择。
+Linux 系统安装 这里以 Fedora 为例（当前最新版本为 Fedora28），简要整理一下安装过程，其他环境大同小异。
+卸载旧版本 如果存在旧版本的 Docker 则将其卸载，不存在可忽略此步骤。</description>
+    </item>
+    
+    <item>
+      <title>使用 kubeadm 安装单控制平面 Kubernetes 集群</title>
+      <link>https://gauliang.github.io/blog/2020/creating-single-control-plane-cluster-with-kubeadm/</link>
+      <pubDate>Sun, 19 Jan 2020 20:30:54 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/creating-single-control-plane-cluster-with-kubeadm/</guid>
+      <description>部署单控制平面 k8s 集群，并安装 Dashboard 和 ingress-nginx 使外部浏览器可以访问集群。  一、拓扑结构 本文主要介绍如何使用 kubeadm 安装部署单控制平面 Kubernetes v1.17.0 集群，所谓单控制平面，顾名思义就是由一个 Control-plane Node 和多个 Work Node 组成的 Kubernetes 集群。高可用集群与此不同，其由多个 Control-plane Node 和多个 Work Node 组成，高可用集群部署中，根据 etcd 数据库部署位置的不同，又分为栈内 etcd 数据库部署和外部独立 etcd 数据库集群部署两种模式。 下面展示了不同部署模式的拓扑结构：
+单控制平面拓扑结构  高可用拓扑结构（栈内 etcd 数据库）  高可用拓扑结构（外部独立 etcd 数据库集群）  高可用部署与单控制平面部署不同，不过，除负载均衡及多 kube-apiserver 部分外，其他流程大同小异。有关高可用安装的更多信息请参考 Creating Highly Available clusters with kubeadm。
+二、准备工作 硬件要求，建议 4 核以上 CPU，8GB 以上内存，Ubuntu 16.04 以上或 CentOS 7 以上版本的操作系统，确保所有服务器间网络通信正常，1 台服务器作为控制平面节点，其余若干台服务器作为工作节点，我这里准备了4个工作节点。基本信息如下：
+   名称 CPU 内存 IP OS 安装 用途     CPN-1 4U 8GB 10.</description>
+    </item>
+    
+  </channel>
+</rss>

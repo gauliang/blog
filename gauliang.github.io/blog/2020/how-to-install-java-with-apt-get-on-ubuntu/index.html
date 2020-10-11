@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Ubuntu 18.04 安装 Java 环境 - OpenJDK - Gauliang</title>
+
+<link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="/vendor/themify-icons/themify-icons.css">
+
+
+<link rel="stylesheet" href="https://gauliang.github.io/scss/main.min.9df1a70ef88529daeadaac5364f3e8ba413d79349e3316a50cc692e170771b5f.css"><body data-spy="scroll" data-target="#table-of-contents"><header class="navigation" id="navigation">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg">
+            <a class="navbar-brand" href="/">
+                <img src="/logo.svg" alt="Gl">
+            </a>            
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="ti-menu"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">                    
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    
+                    
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/blog/">
+                            <span>博客</span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/series/">
+                            <span>系列</span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/tags/">
+                            <span>Tags</span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+            </div>
+        </nav>
+    </div>
+</header><div id="content">
+
+<header class="post-header">
+    <div class="container">
+        <h1 class="post-title">Ubuntu 18.04 安装 Java 环境 - OpenJDK</h1>
+        <div class="post-time">
+            Jan 21, 2020 by Gl
+        </div>
+    </div>
+</header>
+<div class="container">
+    <div class="row">
+        <div class="col-xl-2 col-lg-3 d-none d-xl-block d-lg-block">
+            <div class="table-of-contents" id="table-of-contents">
+                
+                <nav id="TableOfContents">
+  <ul>
+    <li><a class="nav-link"  href="#先决条件">先决条件</a></li>
+    <li><a class="nav-link"  href="#安装默认版本">安装默认版本</a></li>
+    <li><a class="nav-link"  href="#安装指定版本">安装指定版本</a>
+    </li>
+    <li><a class="nav-link"  href="#管理-java">管理 Java</a></li>
+    <li><a class="nav-link"  href="#环境变量-java_home">环境变量 JAVA_HOME</a></li>
+  </ul>
+</nav>
+            </div>
+        </div>
+        <div class="col-xl-8 col-lg-9 post-content">
+            <div class="post-meta-count">
+                <i class="ti-info-alt"></i>
+                <strong>阅读全文约需 3 分钟</strong>
+            </div>
+            <article id="post-content">
+
+                
+                <p>Java 和 JVM（Java 的虚拟机）被广泛使用，本文介绍如何使用 <code>apt-get</code> 安装不同版本的 Open JRE 和 Open JDK。JRE 仅用于提供 Java 应用程序执行环境，如果要编译 Java 应用程序，则要安装 JDK。</p>
+<h2 id="先决条件">先决条件</h2>
+<ul>
+<li>Ubuntu 18.04 服务器</li>
+<li>具有 sudo 或 root 执行权限的账户</li>
+</ul>
+<h2 id="安装默认版本">安装默认版本</h2>
+<p>安装 Java 最简单的做法是使用 Ubuntu 系统自带的版本。默认情况下，Ubuntu 18.04 包含 Open JDK，它是 JRE 和 JDK 的开源变体。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># 更新软件包索引：</span>
+sudo apt update
+
+<span class="c1"># 检查是否已安装Java：</span>
+java -version
+</code></pre></td></tr></table>
+</div>
+</div><p>如果当前未安装 Java，则会看到以下输出：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">Command <span class="s1">&#39;java&#39;</span> not found, but can be installed with:
+...
+</code></pre></td></tr></table>
+</div>
+</div><p>执行以下命令以安装 OpenJDK：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">sudo apt install default-jre
+</code></pre></td></tr></table>
+</div>
+</div><p>该命令将安装 Java Runtime Environment（JRE），这将允许您运行几乎所有的Java软件。再次验证安装：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">$ java -version
+openjdk version <span class="s2">&#34;11.0.5&#34;</span> 2019-10-15
+OpenJDK Runtime Environment <span class="o">(</span>build 11.0.5+10-post-Ubuntu-0ubuntu1.118.04<span class="o">)</span>
+OpenJDK 64-Bit Server VM <span class="o">(</span>build 11.0.5+10-post-Ubuntu-0ubuntu1.118.04, mixed mode, sharing<span class="o">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>除 JRE 之外，您可能还需要 Java 开发工具包（JDK），以便编译和运行某些基于 Java 的应用程序。要安装 JDK，请执行以下命令，该命令还将安装JRE：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">sudo apt install default-jdk
+</code></pre></td></tr></table>
+</div>
+</div><p>通过检查编译器 javac 的版本，验证是否已安装JDK ：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">javac -version
+
+javac 11.0.5
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="安装指定版本">安装指定版本</h2>
+<p>您可以安装默认的 OpenJDK 软件包，也可以安装不同版本的 OpenJDK。</p>
+<p>列出可用版本清单：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">kelsen@kelsen-XPS-L521X:~$ sudo apt install openjdk-
+openjdk-11-dbg           openjdk-11-jre-zero      openjdk-12-jre-headless  openjdk-13-jre           openjdk-8-jdk-headless
+openjdk-11-demo          openjdk-11-source        openjdk-12-jre-zero      openjdk-13-jre-headless  openjdk-8-jre
+openjdk-11-doc           openjdk-12-dbg           openjdk-12-source        openjdk-13-jre-zero      openjdk-8-jre-dcevm
+openjdk-11-jdk           openjdk-12-demo          openjdk-13-dbg           openjdk-13-source        openjdk-8-jre-headless
+openjdk-11-jdk-headless  openjdk-12-doc           openjdk-13-demo          openjdk-8-dbg            openjdk-8-jre-zero
+openjdk-11-jre           openjdk-12-jdk           openjdk-13-doc           openjdk-8-demo           openjdk-8-source
+openjdk-11-jre-dcevm     openjdk-12-jdk-headless  openjdk-13-jdk           openjdk-8-doc            
+openjdk-11-jre-headless  openjdk-12-jre           openjdk-13-jdk-headless  openjdk-8-jdk
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="openjdk-8">OpenJDK 8</h3>
+<p>Java 8 是当前的长期支持版本，尽管公共维护已于 2019 年 1 月结束，但仍得到广泛支持。要安装 OpenJDK 8，请执行以下命令：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">sudo apt install openjdk-8-jdk
+
+<span class="c1"># 验证安装</span>
+java -version
+</code></pre></td></tr></table>
+</div>
+</div><p>也可以仅安装 JRE，可以通过执行 <code>sudo apt install openjdk-8-jre</code> 来完成。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">sudo apt install openjdk-11-jre
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="openjdk1112">OpenJDK11/12</h3>
+<p>如果要安装 Java11</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">sudo apt install openjdk-11-jdk
+
+<span class="c1"># 或者仅安装 jre</span>
+sudo apt install openjdk-11-jre
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="管理-java">管理 Java</h2>
+<p>一台服务器上可以安装多个版本的 Java。使用 <code>update-alternatives</code> 命令可以配置默认使用版本。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">sudo update-alternatives --config java
+
+There are <span class="m">3</span> choices <span class="k">for</span> the alternative java <span class="o">(</span>providing /usr/bin/java<span class="o">)</span>.
+
+  Selection    Path                                            Priority   Status
+------------------------------------------------------------
+  <span class="m">0</span>            /usr/lib/jvm/java-13-openjdk-amd64/bin/java      <span class="m">1311</span>      auto mode
+* <span class="m">1</span>            /usr/lib/jvm/java-11-openjdk-amd64/bin/java      <span class="m">1111</span>      manual mode
+  <span class="m">2</span>            /usr/lib/jvm/java-13-openjdk-amd64/bin/java      <span class="m">1311</span>      manual mode
+  <span class="m">3</span>            /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java   <span class="m">1081</span>      manual mode
+</code></pre></td></tr></table>
+</div>
+</div><p>输入与 Java 版本关联的数字以将其用作默认值，或按 ENTER 保留当前设置。</p>
+<p>您可以对其他 Java 命令执行此操作，例如编译器（javac）：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">sudo update-alternatives --config javac
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="环境变量-java_home">环境变量 JAVA_HOME</h2>
+<p>使用 Java 编写的许多程序都使用 JAVA_HOME 环境变量来确定 Java 安装位置。要设置此环境变量，首先确定 Java 的安装位置。可以通过 <code>update-alternatives</code> 命令获取 Java 的安装路径。</p>
+<p>复制默认版本 Java 的安装路径，然后编辑 <code>/etc/environment</code>，在此文件的末尾，添加或替换您自己复制的路径：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nv">JAVA_HOME</span><span class="o">=</span><span class="s2">&#34;/usr/lib/jvm/java-11-openjdk-amd64/bin/&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>重新加载此文件以将更改应用于当前会话：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">source</span> /etc/environment
+
+<span class="c1"># 验证</span>
+<span class="nb">echo</span> <span class="nv">$JAVA_HOME</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+            </article>
+
+            <div class="post-tag">
+                <strong>Tags:</strong>
+                
+                
+                <a href="https://gauliang.github.iotags/Java">Java</a>
+                
+            </div>
+
+
+            <div class="next-and-prev-post">
+                
+                <a href="https://gauliang.github.io/blog/2020/creating-single-control-plane-cluster-with-kubeadm/" class="prev-post">
+                    <i class="icon ti-arrow-left"></i>
+                    <div class="text">
+                        <div class="caption">2020-01-19 20:30:54</div>
+                        <div class="title">使用 kubeadm 安装单控制平面 Kubernetes 集群</div>
+                    </div>
+                </a>
+                
+                
+                <a href="https://gauliang.github.io/blog/2020/reset-password/" class="next-post">
+                    <div class="text">
+                        <div class="caption">2020-01-21 22:44:48</div>
+                        <div class="title">常用系统 root 密码重置</div>
+                    </div>
+                    <i class="icon ti-arrow-right"></i>
+                </a>
+                
+            </div>
+
+        </div>
+        <div class="col-xl-2 d-none d-xl-block">
+            
+            
+        </div>
+    </div>
+
+</div>
+
+        </div><footer class="page-footer">
+    <div class="container">
+        <div class="copyright">
+            <pre><code>$ echo "simple things scale." </code></pre>
+            <ul>
+                <li><a href="https://gauliang.github.io">Home page</a></li>
+                <li><a href="https://gauliang.github.io"><i class="ti-info-alt"></i> about</a></li>
+                <li><a href="https://github.com/gauliang" target="_blank"><i class="ti-github"></i> GitHub</a></li>
+            </ul>
+        </div>
+    </div>
+</footer>
+
+<a id="scroll-to-top" href="javascript:void(0);">Scroll to top</a>
+
+<script src="/vendor/jquery/jquery-3.4.1.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="/vendor/svgjs/svg.min.js"></script>
+<script src="/js/javascript.js"></script></body>
+</html>

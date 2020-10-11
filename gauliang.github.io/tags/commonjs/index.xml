@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>commonjs on Gauliang</title>
+    <link>https://gauliang.github.io/tags/commonjs/</link>
+    <description>Recent content in commonjs on Gauliang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Sun, 06 Sep 2020 10:19:40 +0800</lastBuildDate>
+    
+	<atom:link href="https://gauliang.github.io/tags/commonjs/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>CommonJS Modules</title>
+      <link>https://gauliang.github.io/blog/2020/commonjs-modules/</link>
+      <pubDate>Sun, 06 Sep 2020 10:19:40 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/commonjs-modules/</guid>
+      <description>CommonJS Modules  在 ES2015（也被称为ES6） 标准之前，JavaScript语言没有模块化组织代码的原生方法，CommonJS 模块格式填补了这一空白。 CommonJS 规范了如何编写模块，以及如何在模块系统之间实现互操作。由于其同步执行特性，CMD 主要用于服务端开发。
+ 本文代码范例均基于 Node.js (Node.js 模块基于该规范略有不同)。
+ 模块规范  在模块中，有一个可用的 require 函数。  require 函数接收一个模块标识符 require 函数返回外部模块导出的 API 如果存在依赖循环，则外部模块在其传递依赖要求时可能尚未完成执行；在这种情况下，由 require 返回的对象必须至少包含外部模块在调用要求导致当前模块执行之前准备的导出。 如果要求的模块不能被返回，则 require 必须 throw 一个错误。   在模块中，有一个名为 exports 的自由变量，该变量是模块在执行时可以向其添加 API 的对象。 模块必须使用 exports 对象作为唯一的导出方法。  应用 所有代码都运行在模块作用域，不会污染全局作用域。模块的加载顺序，按照其在代码中的出现顺序。 接下来，我们尝试用 Commonjs 完成一个简单的小应用。在 math.js 中声明一个 CommonJS 模块，并通过 exports 导出名为 add 的方法。
+1 2 3 4 5 6 7 8  //math.js exports.add = function() { var sum = 0, i = 0, args = arguments, l = args.</description>
+    </item>
+    
+    <item>
+      <title>Javascript 模块化概述</title>
+      <link>https://gauliang.github.io/blog/2020/what-are-cjs-amd-umd-and-esm-in-javascript/</link>
+      <pubDate>Sat, 05 Sep 2020 16:04:37 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/what-are-cjs-amd-umd-and-esm-in-javascript/</guid>
+      <description>当我们提及模块化时，通常意味着是由一组高度分离的，不同的功能块存储在模块中组成的。 在可能的情况下，通过松散耦合消除依赖关系简化应用程序的可维护性。 本文概述集中流行的模块化规范，以便在不同应用场景中能够快速决策选型。
+CommonJS CommonJS 是同步导入，主要用于服务器端，无法在浏览器中直接运行。 导入 CJS 时，它将为你提供导入对象的副本，不支持 Tree-shaking。 通过 require 和 exports 与模块系统交互。
+1 2 3 4 5 6 7  //importing const doSomething = require(&amp;#39;./doSomething.js&amp;#39;); //exporting module.exports = function doSomething(n) { // do something }   AMD AMD 全称 Asynchronous Module Definition —— 异步模块定义，由 RequireJS 实现，可在浏览器直接使用，语法相对复杂。
+1 2 3 4 5 6 7 8 9 10 11 12 13  define([&amp;#39;dep1&amp;#39;, &amp;#39;dep2&amp;#39;], function (dep1, dep2) { //Define the module value by returning a value.</description>
+    </item>
+    
+  </channel>
+</rss>
