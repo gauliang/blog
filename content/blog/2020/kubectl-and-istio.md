@@ -7,7 +7,7 @@ type: "posts"    # posts | series
 tags: ["cloudnative", "linux", "kubernetes","service-mesh"]
 series: []
 author: "Gl"
-cover: ""     # image name
+cover: "cover.jpg"     # image name
 ---
 
 ## 一、Kubectl

@@ -2,12 +2,12 @@
 title: "Javascript Closure"
 date: 2020-10-11T18:45:55+08:00
 draft: false
-Description: "**定义** 函数和与其相关的词法环境（lexical environment）一起构成闭包（closure）。闭包可以让你从内部函数访问外部函数作用域，在 JavaScript 中，每当函数被创建，就会在函数生成时生成闭包。"
+Description: "函数和与其相关的词法环境（lexical environment）一起构成闭包（closure）。闭包可以让你从内部函数访问外部函数作用域，在 JavaScript 中，每当函数被创建，就会在函数生成时生成闭包。"
 type: "posts"    # posts | series
-tags: [closure, lexical-environment, 闭包]
+tags: [closure, lexical-environment, javascript, node.js, 闭包]
 series: []
 author: "Gl"
-cover: false     # image name
+cover: "cover.jpg"     # image name
 ---
 
 ## 什么是闭包

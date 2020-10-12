@@ -6,6 +6,8 @@ theme = "tech-blog"
 paginate=10
 sectionPagesMenu = "main"
 publishdir="gauliang.github.io"
+hasCJKLanguage = true
+
 [menu]
 
   [[menu.main]]
