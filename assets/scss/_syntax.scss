@@ -1,6 +1,6 @@
 code{
-    background-color: #673ab733;
-    color: #234;
+    background-color: #3f51b517;
+    color: #3F51B5;
     padding: 2px 5px;
     border-radius: 2px;
 }
@@ -136,5 +136,10 @@ pre code{background-color: initial; padding:initial;}
 .highlight code.language-text::after {
     content: "text";
     background-color: #607D8B;
+    color:#FFF;
+}
+.highlight code.language-css::after {
+    content: "css";
+    background-color: #29f;
     color:#FFF;
 }
