@@ -115,11 +115,10 @@ pre code{background-color: initial; padding:initial;}
     border-radius: 0 0 0 3px;
     line-height: 1em;
     background: #ffffff;
-    text-transform: uppercase;
     color: #343a40;
 }
 .highlight code.language-js::after ,.highlight code.language-javascript::after {
-    content: "js";
+    content: "Js";
     background: #FFE70B;
     color: #2c251b;
 }
