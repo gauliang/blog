@@ -5,7 +5,7 @@ draft: false
 Description: "大多数情况下，网站不再只是用带有一些可选 JavaScript 的纯 HTML 编写，它们通常完全由 JavaScript
 构建。因此，我们必须将代码打包，最小化和翻译成所有浏览器都能理解的东西，这就是webpack的用武之地。"
 type: "posts"    # posts | series
-tags: [webpack]
+tags: [webpack,devops,node.js,esm]
 series: [Dive into webpack]
 author: "Gl"
 cover: "webpack.jpg"     # image name
