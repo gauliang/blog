@@ -1,13 +1,14 @@
 data:
-- icon: "images/kubernetes.svg"
-  isImage: true
-  name: "Kubernetes"
-  identifier: "Kubernetes"
 
-- icon: "images/go.svg"
+- icon: "ti-loop"
+  isImage: false
+  name: "DevOps"
+  identifier: "devops"
+
+- icon: "images/node-dot-js.svg"
   isImage: true
-  name: "Go lang"
-  identifier: "Golang"
+  name: "JS/TS/Node.js"
+  identifier: "Node.Js"
 
 - icon: "ti-layout-slider-alt"
   isImage: false
@@ -19,12 +20,12 @@ data:
   name: "Java"
   identifier: "java"
 
-- icon: "ti-loop"
-  isImage: false
-  name: "DevOps"
-  identifier: "devops"
-
-- icon: "images/node-dot-js.svg"
+- icon: "images/kubernetes.svg"
   isImage: true
-  name: "Node.js"
-  identifier: "Node.Js"
+  name: "Kubernetes"
+  identifier: "Kubernetes"
+
+- icon: "images/go.svg"
+  isImage: true
+  name: "Go lang"
+  identifier: "Golang"

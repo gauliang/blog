@@ -1,4 +1,4 @@
 <figure class="image-widget">
     <a href="../{{ .Page.File.TranslationBaseName }}.files/{{ .Get "src"}}" target="_blank"><img src="../{{ .Page.File.TranslationBaseName }}.files/{{ .Get "src"}}" alt="{{ .Get "alt"}}"></a>
-    <figcaption>{{ .Get "alt"}}</figcaption>
+    {{if .Get "alt"}}<figcaption>{{ .Get "alt"}}</figcaption>{{end}}
 </figure>

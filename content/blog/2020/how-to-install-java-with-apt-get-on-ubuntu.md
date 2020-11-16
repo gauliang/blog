@@ -12,7 +12,6 @@ cover: false     # image name
 
 Java 和 JVM（Java 的虚拟机）被广泛使用，本文介绍如何使用 `apt-get` 安装不同版本的 Open JRE 和 Open JDK。JRE 仅用于提供 Java 应用程序执行环境，如果要编译 Java 应用程序，则要安装 JDK。
 
-
 ## 先决条件
 
 - Ubuntu 18.04 服务器
@@ -31,10 +30,12 @@ java -version
 ```
 
 如果当前未安装 Java，则会看到以下输出：
+
 ```bash
 Command 'java' not found, but can be installed with:
 ...
 ```
+
 执行以下命令以安装 OpenJDK：
 
 ```bash
@@ -83,6 +84,7 @@ openjdk-11-jre-headless  openjdk-12-jre           openjdk-13-jdk-headless  openj
 ```
 
 ### OpenJDK 8
+
 Java 8 是当前的长期支持版本，尽管公共维护已于 2019 年 1 月结束，但仍得到广泛支持。要安装 OpenJDK 8，请执行以下命令：
 
 ```bash
@@ -125,6 +127,7 @@ There are 3 choices for the alternative java (providing /usr/bin/java).
   2            /usr/lib/jvm/java-13-openjdk-amd64/bin/java      1311      manual mode
   3            /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java   1081      manual mode
 ```
+
 输入与 Java 版本关联的数字以将其用作默认值，或按 ENTER 保留当前设置。
 
 您可以对其他 Java 命令执行此操作，例如编译器（javac）：
