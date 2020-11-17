@@ -46,11 +46,20 @@
     }
 
     a {
-      color: #7a7a7a;
-      text-decoration: underline #ddd;
+      color: #333;
+      position: relative;
+      &::after{
+        content: " ";
+        border-bottom: dotted #333 1px;
+        position: absolute;
+        left: 0.5em;
+        right: 0.5em;
+        bottom: 0;
+      }
 
       &:hover {
         color: $primary-color;
+        text-decoration: none;
       }
     }
   }

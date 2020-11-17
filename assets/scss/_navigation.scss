@@ -99,7 +99,6 @@
             flex-basis: 230px;
 
             a {
-                border: 1px solid #eee;
                 background-color: #fff;
                 box-shadow: 0 2px 8px 0 rgba(10, 10, 10, .1);
                 border-radius: 3px;
@@ -110,6 +109,7 @@
                 padding: 1rem;
                 text-decoration: none;
                 color: #566;
+                position: relative;
 
                 &:hover {
                     color: $primary-color;
@@ -173,4 +173,17 @@
     &.loaded{
         display: flex;
     }
+}
+
+#navbox-dialog{
+    background-color: #FFF;
+    position: absolute;
+    z-index: 10;
+    top:75px;
+    left: 0;
+    right: 0;
+    border: 1rem solid #EEE;
+    display: none;
+
+    a{display: block; flex: none;}
 }

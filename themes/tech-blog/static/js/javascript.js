@@ -159,3 +159,37 @@ $(function () {
         }
     })
 }()
+
+$(function(){
+    var tagLink = $('[data-keywords]')
+    var dialog = $('#navbox-dialog')
+
+    function createLinks(tags){
+        var html = ''
+        for (let index = 0; index < tags.length; index++) {
+            html += '<a href="/tags/'+tags[index]+'" force="true">'+tags[index]+'</a>'
+        }
+        return html
+    }
+    tagLink.click(function(e){
+
+        if($(e.target).attr('force')) return;
+
+        var that = $(this);
+        var tags = that.attr('data-keywords').split(" ");
+        if(tags.length>1){
+
+            e.preventDefault()
+
+            if(that.attr('active')=='true'){
+                dialog.html('').hide();
+                that.attr({'active':'false'})
+            }else{
+                that.attr({'active':'true'})
+                dialog.html(createLinks(tags))
+                that.append(dialog)
+                dialog.show()
+            }
+        }
+    })
+})

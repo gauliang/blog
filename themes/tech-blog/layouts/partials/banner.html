@@ -8,10 +8,22 @@
 
           {{ $tags := .Site.Taxonomies.tags }}
           {{ $data := .Data }}
+
           {{ range $key, $value := .Site.Data.tagmeta.data }}
           <li>
-            {{ $tag := index $tags (lower $value.identifier) }}
-            <a href="/tags/{{ $value.identifier | urlize }}">
+            {{ $keywords := split $value.identifier " " }}
+            {{ $sets := slice}}
+
+            {{ range $item := $keywords}}
+              {{ $articles := index $tags (lower $item)}}
+
+              {{ range $article := $articles}}
+                {{ $sets = $sets | append $article.Title }}
+              {{ end }}
+              
+            {{ end }}
+
+            <a href="/tags/{{ index $keywords 0 | urlize }}" data-keywords="{{$value.identifier}}">
               <div class="icon">
                 {{ if $value.isImage }}
                 <img src="{{ $value.icon }}">
@@ -20,7 +32,7 @@
                 {{ end }}
               </div>
               <div class="text">
-                <div class="caption">{{ $tag.Count }}</div>
+                <div class="caption">{{ len (uniq $sets) }}</div>
                 <div class="title">{{ $value.name }}</div>
               </div>
               <label for=""></label>
@@ -39,3 +51,5 @@
     </div>
   </div>
 </div>
+
+<div id="navbox-dialog"></div>

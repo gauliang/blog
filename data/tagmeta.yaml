@@ -8,7 +8,7 @@ data:
 - icon: "images/node-dot-js.svg"
   isImage: true
   name: "JS/TS/Node.js"
-  identifier: "Node.Js"
+  identifier: "javascript typescript Node.Js"
 
 - icon: "ti-layout-slider-alt"
   isImage: false
@@ -29,3 +29,8 @@ data:
   isImage: true
   name: "Go lang"
   identifier: "Golang"
+
+# - icon: "images/go.svg"
+#   isImage: true
+#   name: "React"
+#   identifier: "react"
