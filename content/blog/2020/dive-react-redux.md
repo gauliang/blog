@@ -4,7 +4,7 @@ date: 2020-11-15T08:24:14+08:00
 draft: false
 Description: "React Redux是React的官方Redux UI绑定库 。 如果您同时使用Redux和React，则还应该使用React Redux绑定这两个库。"
 type: "posts"    # posts | series
-tags: [react,redux,flux,javascript,node.js]
+tags: [react,redux,flux,javascript,node.js,redux-toolkit]
 series: [react]
 author: "Gl"
 cover: "dive-react-redux.jpg"     # image name
@@ -155,12 +155,24 @@ Selector 是可以从 Store State 中提取特定信息的函数。当应用程�
 
 {{<image src="ReduxDataFlowDiagram.gif">}}
 
+## Redux Toolkit
+
+Redux Toolkit 通过遵循 Redux 最佳实践，提供了良好的默认行为，捕获错误并允许您编写更简单的代码，使编写良好的 Redux 应用程序和加快开发速度变得更加容易。
+
+Redux Toolkit 提供了一系列实用功能，包括：
+
+1. `configureStore()` —— 简化创建 Store 配置选项。它可以自动组合 Reducer slice，并加载常用中间件，如 `redux-thunk`，并默认启用哪个 **Redux DevTools Extension**；
+1. `createReducer()` —— 内部自动使用 `immer` 简化了数据更新；
+1. `createAction()` —— 为给定动作类型字符串创建 **action creator** 函数。
+1. `createSlice` —— 接受一组配置信息，如 name、initialState。自动生成 action coretor；
+1. `createSelector` —— 更加便捷的从 state 中导出需要的数据
+
 ## React-redux
 
 Redux 本身是一个独立的库，可与任何 UI 层或框架一起使用，通常需要使用 **UI 绑定库** 将 Redux 与 UI 框架绑定在一起，而不是通过 UI 代码直接与 **Store** 进行交互。
 React Redux 是 React 的官方 Redux UI 绑定库，它使得 React 组件可以从 Redux store 读取数据或分发 `action` 到 **Store** 以更新 `state`。
 
-### 4.1 Provider
+### 5.1 Provider
 
 React Redux 提供了一个 `<Provider />` 组件，将 **store** 对象以 props 形式注入到组件中，可以使其所有子组件中均可访问到 store 对象。
 
@@ -182,7 +194,7 @@ ReactDOM.render(
 )
 ```
 
-### 4.2 Connect
+### 5.2 Connect
 
 React Redux 通过名为 `connect` 的函数将组件和 **store** 对象进行链接，随后在组件内部能以 props 的形式访问 `dispatch` 和 `state`。
 
