@@ -155,18 +155,6 @@ Selector 是可以从 Store State 中提取特定信息的函数。当应用程�
 
 {{<image src="ReduxDataFlowDiagram.gif">}}
 
-## Redux Toolkit
-
-Redux Toolkit 通过遵循 Redux 最佳实践，提供了良好的默认行为，捕获错误并允许您编写更简单的代码，使编写良好的 Redux 应用程序和加快开发速度变得更加容易。
-
-Redux Toolkit 提供了一系列实用功能，包括：
-
-1. `configureStore()` —— 简化创建 Store 配置选项。它可以自动组合 Reducer slice，并加载常用中间件，如 `redux-thunk`，并默认启用哪个 **Redux DevTools Extension**；
-1. `createReducer()` —— 内部自动使用 `immer` 简化了数据更新；
-1. `createAction()` —— 为给定动作类型字符串创建 **action creator** 函数。
-1. `createSlice` —— 接受一组配置信息，如 name、initialState。自动生成 action coretor；
-1. `createSelector` —— 更加便捷的从 state 中导出需要的数据
-
 ## React-redux
 
 Redux 本身是一个独立的库，可与任何 UI 层或框架一起使用，通常需要使用 **UI 绑定库** 将 Redux 与 UI 框架绑定在一起，而不是通过 UI 代码直接与 **Store** 进行交互。
@@ -215,6 +203,20 @@ export default connect(
   mapDispatchToProps
 )(Counter)
 ```
+
+## Redux Toolkit
+
+Redux Toolkit 通过遵循 Redux 最佳实践，提供了良好的默认行为，捕获错误并允许您编写更简单的代码，使编写良好的 Redux 应用程序和加快开发速度变得更加容易。
+
+Redux Toolkit 提供了一系列实用功能，包括：
+
+1. `configureStore()` —— 简化创建 Store 配置选项。它可以自动组合 Reducer slice，并加载常用中间件，如 `redux-thunk`，并默认启用哪个 **Redux DevTools Extension**；
+1. `createReducer()` —— 内部自动使用 `immer` 简化了数据更新；
+1. `createAction()` —— 为给定动作类型字符串创建 **action creator** 函数。
+1. `createSlice` —— 接受一组配置信息，如 name、initialState。自动生成 action coretor；
+1. `createSelector` —— 更加便捷的从 state 中导出需要的数据
+
+Redux Toolkit 不仅简化了很多操作流程，还提供了一系列 Hook，使得在 React 组件中与 Redux Store 交互变轻而易举。
 
 ## 参考
 
