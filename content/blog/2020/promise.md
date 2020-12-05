@@ -77,7 +77,7 @@ getJSON('story.json').then(function(story) {
 
 ## 错误处理
 
-`then()` 包含两个参数：一个用于成功，一个用于失败：
+Promise 会自动捕获内部异常，并交给 rejected 响应函数处理。`then()` 包含两个参数：一个用于成功，一个用于失败：
 
 ```js
 get('story.json').then(function(response) {
@@ -94,6 +94,43 @@ get('story.json').then(function(response) {
   console.log("Success!", response);
 }).catch(function(error) {
   console.log("Failed!", error);
+})
+```
+
+## 错误处理的链式调用
+
+1. 一旦发生错误，后续所有 `then() 方法的 resolve 回调` 将都不会执行，直至遇到 `catch()` 或 `then() 方法的 reject 回调`;
+1. 错误一经处理，将返回成功的 Promise，后续链时调用的 `then()` 会正常执行；
+1. 所以，如果在 `catch()` 之前的 `then()` 方法中通过 `reject` 回调处理了异常，后面的 `catch()` 将不会执行;
+
+```js
+const work = new Promise((resolve) => {
+    console.log('11')
+    resolve('resolve-1')
+    console.log('22')
+}).then(data => {
+    console.log(data)
+    // 抛出异常
+    throw new Error('Custom error message.')
+}).then(res => {
+    // 由于前面的异常，这个 resolve 回调不会执行
+    console.log('Then after throw error')
+}).then(res => {
+    // 由于前面的异常，这个 resolve 回调不会执行
+    console.log('Then after throw error')
+    return 'resolve-22'
+}, error => {
+    // 截获并处理错误信息
+    console.log(error.message, 'then')
+}).then(res => {
+    // 错误信息已被处理，该行正行打印
+    console.log(res)
+}).catch(error => {
+    // 错误信息已被处理，当前 Promise 状态为成功，这里不会执行
+    console.log(error.message, 'catch')
+}).then(res => {
+    // 正常输出
+    console.log('after catch')
 })
 ```
 
