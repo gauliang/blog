@@ -27,7 +27,7 @@ cover: 'throttle-and-debounce.jpg'     # image name
 /**
  * Throttle
  * @param executor {Functioin} 执行器
- * @param time {Number} 节流时间,单位毫秒
+ * @param time {Number} 单位毫秒
  */
 function Throttle(executor, time) {
     let prev = Date.now();
@@ -90,7 +90,7 @@ Executor 根据节流配置(`1000ms`)均匀执行，成功打印事件类型，�
 /**
  * Debounce
  * @param executor {Functioin} 执行器
- * @param time {Number} 节流时间,单位毫秒
+ * @param time {Number} 单位毫秒
  */
 function Debounce(executor, time) {
 
