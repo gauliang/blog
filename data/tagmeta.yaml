@@ -1,14 +1,14 @@
 data:
 
-- icon: "ti-loop"
-  isImage: false
-  name: "DevOps"
-  identifier: "devops"
-
 - icon: "images/node-dot-js.svg"
   isImage: true
   name: "JS/TS/Node.js"
   identifier: "javascript typescript Node.Js"
+
+- icon: "ti-loop"
+  isImage: false
+  name: "DevOps"
+  identifier: "devops"
 
 - icon: "ti-layout-slider-alt"
   isImage: false
