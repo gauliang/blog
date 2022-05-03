@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Gitlab on Gauliang</title>
+    <link>https://gauliang.github.io/series/gitlab/</link>
+    <description>Recent content in Gitlab on Gauliang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Sat, 29 Aug 2020 08:09:15 +0800</lastBuildDate><atom:link href="https://gauliang.github.io/series/gitlab/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Gitlab CE Work Flow</title>
+      <link>https://gauliang.github.io/blog/2020/gitlab-ce-work-flow/</link>
+      <pubDate>Sat, 29 Aug 2020 08:09:15 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/gitlab-ce-work-flow/</guid>
+      <description>本系列文章旨在整理和规范 Gitlab-CE 在团队协作中的最佳应用建议。内容将覆盖工作流规范、CI、CD、WebHooks、ChatOps、Gitlab API</description>
+    </item>
+    
+  </channel>
+</rss>

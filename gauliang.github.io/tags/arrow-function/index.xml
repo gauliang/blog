@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>arrow-function on Gauliang</title>
+    <link>https://gauliang.github.io/tags/arrow-function/</link>
+    <description>Recent content in arrow-function on Gauliang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Sat, 05 Sep 2020 10:51:40 +0800</lastBuildDate><atom:link href="https://gauliang.github.io/tags/arrow-function/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Javascript 箭头函数最佳实践[译]</title>
+      <link>https://gauliang.github.io/blog/2020/javascript-arrow-function-best-practices/</link>
+      <pubDate>Sat, 05 Sep 2020 10:51:40 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/javascript-arrow-function-best-practices/</guid>
+      <description>Javascript 箭头函数最佳实践 英文原文： 5 Best Practices to Write Quality Arrow Functions 箭头函数的语法简洁明了，非常适合作为回调使用，这里介绍 5 个有关箭头函数的最佳实践。 一、箭头函数名</description>
+    </item>
+    
+  </channel>
+</rss>

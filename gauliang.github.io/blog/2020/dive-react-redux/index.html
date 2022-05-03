@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>深入 React Redux - Gauliang</title>
+
+<link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="/vendor/themify-icons/themify-icons.css">
+
+
+<link rel="stylesheet" href="https://gauliang.github.io/scss/main.min.7f61b4e8391e65e8610cea419646501340197a41be59be698ae440173dcb74cb.css"><body data-spy="scroll" data-target="#table-of-contents"><header class="navigation" id="navigation">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg">
+            <a class="navbar-brand" href="/">
+                <img src="/logo.svg" alt="Gl">
+            </a>            
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="ti-menu"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">                    
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    
+                    
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/blog/">
+                            <span>博客</span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/series/">
+                            <span>系列</span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/tags/">
+                            <span>Tags</span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+            </div>
+        </nav>
+    </div>
+</header><div id="content">
+
+<header class="post-header">
+    <div class="container">
+        <h1 class="post-title">深入 React Redux</h1>
+        <div class="post-time">
+            Nov 15, 2020 by Gl
+        </div>
+    </div>
+</header>
+<div class="container">
+    <div class="row">
+        <div class="col-xl-2 col-lg-3 d-none d-xl-block d-lg-block">
+            <div class="table-of-contents" id="table-of-contents">
+                
+                <nav id="TableOfContents">
+  <ul>
+    <li><a class="nav-link"  href="#flux-模型">Flux 模型</a>
+    </li>
+    <li><a class="nav-link"  href="#redux-模型">Redux 模型</a>
+    </li>
+    <li><a class="nav-link"  href="#redux-数据流">Redux 数据流</a></li>
+    <li><a class="nav-link"  href="#react-redux">React-redux</a>
+    </li>
+    <li><a class="nav-link"  href="#redux-toolkit">Redux Toolkit</a></li>
+    <li><a class="nav-link"  href="#参考">参考</a></li>
+  </ul>
+</nav>
+            </div>
+        </div>
+        <div class="col-xl-8 col-lg-9 post-content">
+            <div class="post-meta-count">
+                <i class="ti-info-alt"></i>
+                <strong>阅读全文约需 22 分钟</strong>
+            </div>
+            <article id="post-content">
+
+                
+                <p>要谈论 react-redux 得先从了解 flux 和 redux 开始，flux 本身是一种架构模式，redux 是一个实现了 Flux 架构模式的面向 JS 的通用状态管理器，
+react-redux 提供了一种机制使得我们能够更方便的在 react 中使用 Redux。</p>
+<h2 id="flux-模型">Flux 模型</h2>
+<p>Flux 是 Facebook 用于构建客户端 Web 应用程序的<strong>应用程序体系结构</strong>，它更像是一种模式，而不是正式的框架。
+Flux 模型包含三个主要部分：Dispatcher，Store 和 View(React组件)。Flux 避免使用 MVC 来支持单向数据流。
+当用户与 View 进行交互时，View 通过 Dispatcher 将 Action 分发到保存应用程序数据和业务逻辑的 Store，然后再更新受影响的 View。
+在外部不能直接修改 Store 的数据，必须通过 Dispather 传递 Action 给 Store 中注册的回调函数来实现数据修改，这有助于将关注点清晰的分开。</p>
+<figure class="image-widget">
+    <a href="../dive-react-redux.files/flux-simple.png" target="_blank"><img src="../dive-react-redux.files/flux-simple.png" alt="单向数据流是 Flux 模式的核心"></a>
+    <figcaption>单向数据流是 Flux 模式的核心</figcaption>
+</figure>
+<p>Flux 应用程序的数据沿单一方向流动，上图中 Dispatcher、Store、View 是具有独立输入输出的节点，Action 是一个简单对象，包含新数据和标识 Action 类型的 type 属性。
+用户与 View 的交互会在系统中产生 Action 传播。</p>
+<ol>
+<li>所有数据都流经 Dispatcher，提供给 Dispatcher 的 Action 是通过 <em>Action creator</em> 方法创建的对象，这通常来自用户与视图的交互。</li>
+<li>Dispatcher 通过调用注册在 Store 中的回调函数完成 Action 到 Store 的分发。在已注册的回调中，Store 将响应与其所维护状态相关的具体操作。</li>
+<li>Store 触发 <code>change</code> 事件，将数据层的变化通知到 Controller-views。</li>
+<li>Controller-views 监听这些事件，并从  event handler 中读取来自 Stores 的数据。</li>
+<li>Controller-views 调用他们自己的 <code>setState()</code> 方法，从而在组件树中更新自身及其所有后代。</li>
+</ol>
+<p>这与双向数据绑定有着显著不同，应用程序状态仅在 Store 中维护，从而使应用程序的不同部分保持高度分离。单项数据流，也使整个系统变得更加可预测。
+双向数据绑定会导致级联更新，其中更改一个对象会导致另一个对象更改，这也可能触发更多更新。随着应用程序的增长，这些级联更新使得由用户交互而发生的变化很难预测。</p>
+<h3 id="11-dispatcher">1.1 Dispatcher</h3>
+<p>Dispatcher 是 Flux 应用程序的中央调度器，能够分发 Action 到 Store 中。它维护一个 callback 注册表，这些回调函数(callback)能够与 Store 进行交互。
+每个 Store 都在 Dispatcher 中注册自己并提供回调函数，当 <strong>Action creator</strong> 提供一个新的 Action 给 Dispatcher 时，Store 可以通过注册到注册表中的 callback 接收 Action。</p>
+<p>随着应用程序的增长，Dispatcher 会变得越来越重要，它还可以通过按特定顺序调用注册的 callback 来管理 Store 之间的依赖关系。
+Store 也可以声明性地等待其它 Store 完成更新，然后再进行相应的更新。</p>
+<h3 id="12-store">1.2 Store</h3>
+<p>Store 存储应用程序状态和逻辑。如上所述，Store 在 Dispatcher 中注册自己，并为其提供 callback。该 callback 将 Action 作为参数接收，callback 内部基于 Action type 的 switch
+语句为不同类型的 Action 执行不同的操作，这使得 Action 能够通过 Dispatcher 更新存储在 Store 中的数据。Store 更新后，它会广播一个事件，声明其状态已经更改，视图可以查询新状态并完成更新。</p>
+<h3 id="13-controller-view">1.3 Controller-view</h3>
+<p>React 提供了视图的嵌套能力，在嵌套视图层次的顶部，我们可以通过一个特殊视图订阅 Store 的广播事件，我们称这样的视图组件为控制器视图(Controller-view)，
+它能够从 Store 中获取数据，并向下传递至其后代链。当从视图接收到事件时，可通过 Store 的 <code>getter</code> 方法请求所需数据，
+然后，调用 <code>setState()</code> 或 <code>forceUpdate()</code> 方法促使自己和后代的 <code>render()</code> 方法运行。</p>
+<h3 id="14-action">1.4 Action</h3>
+<p>Action 是一个简单的 js 对象，用以描述 Flux 模型中的动作，其结构为 <code>{type:'type',payload:'data'}</code>。可以将其发送给 Dispatcher 公开的方法，以实现 Action 到 Store 派发。</p>
+<h2 id="redux-模型">Redux 模型</h2>
+<p>由于 Flux 本身并不是框架，因此开发人员已尝试提出 Flux 模式的许多实现。最终，一个明显的赢家出现了，那就是 Redux，其已成为 React 生态中开发人员集中管理应用状态的事实标准库。</p>
+<p>Redux 是一个面向 JS 应用程序的可预测状态管理器，它使用基于 <strong>Action</strong> 的事件模型来管理和更新应用程序状态，从而现集中化管理应用程序状态和逻辑。
+作为一个通用解决方案，Redux 可与任何 UI 层一起使用，如 React、Angular、Vue 等。虽然 Redux 是 Flux 架构的实现，但也存在一些细微差异。</p>
+<h3 id="21-actions">2.1 Actions</h3>
+<p>这与 Flux 中的定义相同，Action 是一个 JS 简单对象，包含 <code>type</code> 字段及一些可选的载荷信息。可以把 Action 理解为描述应用中事件的描述。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">addTodoAction</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;todos/todoAdded&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">payload</span><span class="o">:</span> <span class="s1">&#39;Buy milk&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="22-action-creators">2.2 Action Creators</h3>
+<p><strong>Action Creator</strong> 是一个创建并返回 Action 对象的方法，通过它可以避免在每次使用 Action 时书写重复的代码。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">addTodo</span> <span class="o">=</span> <span class="nx">text</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;todos/todoAdded&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">payload</span><span class="o">:</span> <span class="nx">text</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="23-reducers">2.3 Reducers</h3>
+<p>Reducer 是一个函数，它接收两个参数，分别为当前 <code>state</code> 和 <code>action</code> 对象，Reducer 内部决定如何更新 state，并返回一个新的 state。可以描述为 <code>(state, action) =&gt; newState</code>。
+可以把 Reducer 视为事件侦听器，该事件侦听器根据接收到的 action(event) 来处理事件。Reducer 必须遵循下列规则：</p>
+<ol>
+<li>通过 <code>state</code> 和 <code>action</code> 参数计算并返回 <strong>全新的</strong> <code>state</code>；</li>
+<li>不能修改已经存在的 <code>state</code>，内部可以通过拷贝已经存在的 <code>state</code> 进行相关操作；</li>
+<li>不能具有副作用(side effects)。如果用同样的参数两次调用必须返回可预期的结果，内部不能出现如异步或 random 之类的操作；</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">initialState</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">value</span><span class="o">:</span> <span class="mi">0</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">counterReducer</span><span class="p">(</span><span class="nx">state</span> <span class="o">=</span> <span class="nx">initialState</span><span class="p">,</span> <span class="nx">action</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="p">(</span><span class="nx">action</span><span class="p">.</span><span class="nx">type</span> <span class="o">===</span> <span class="s1">&#39;counter/increment&#39;</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="p">...</span><span class="nx">state</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">value</span><span class="o">:</span> <span class="nx">state</span><span class="p">.</span><span class="nx">value</span> <span class="o">+</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="nx">state</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Reducer 内部可以通过 <code>if/else</code> 或 <code>switch</code> 等语句，根据不同的 <code>action.type</code> 作出不同的响应并返回新的 <code>state</code>。</p>
+<h3 id="24-store">2.4 Store</h3>
+<p>Redux 应用的当前 <code>state</code> 保存在一个称为 <strong>Store</strong> 的对象上，<strong>Store</strong> 对象通过传入 Reducer 创建，并对外提供 <code>getState</code> 方法，该方法返回当前 <code>state</code> 信息。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">store</span> <span class="o">=</span> <span class="nx">createStore</span><span class="p">(</span><span class="nx">counterReducer</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">store</span><span class="p">.</span><span class="nx">getState</span><span class="p">())</span>   <span class="c1">// {value: 0}
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="25-dispatch">2.5 Dispatch</h3>
+<p>Redux Store 对象还拥有一个名为 <code>dispatch</code> 的方法，更新 <code>state</code> 的唯一方法就是传递一个 <code>action</code> 对象给该方法。Store 内部会执行 reducer 方法，并保存一份新数据。
+当我们再次调用 <code>getState()</code> 将会返回更新过的 <code>state</code>。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nx">store</span><span class="p">.</span><span class="nx">dispatch</span><span class="p">({</span> <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;counter/increment&#39;</span> <span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">store</span><span class="p">.</span><span class="nx">getState</span><span class="p">())</span>   <span class="c1">// {value: 1}
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>您可以将 Dispatch 视为 <strong>触发事件</strong>，通过 Dispatch 通知 Store 应用中存在 Action 需要处理，Reducer 的行为就像事件侦听器，当他们接收到自己感兴趣的 Action 时，会响应事件并更新状态。</p>
+<h3 id="26-selector">2.6 Selector</h3>
+<p>Selector 是可以从 Store State 中提取特定信息的函数。当应用程序变得庞大时，它将变得很有用。</p>
+<h2 id="redux-数据流">Redux 数据流</h2>
+<ol>
+<li>初始化
+<ol>
+<li>使用 <strong>root reducer</strong> 创建 <strong>Redux store</strong>;</li>
+<li><strong>Store</strong> 调用 <code>reducer</code> 并保存其初始值；</li>
+<li>当 View 第一次被渲染，会从 Redux store 中访问当前 <code>state</code> 并根据 <code>state</code> 渲染视图。View 也可以订阅 Store 的变更消息，这样在未来当 state 再次变化，视图就能够发现并处理它。</li>
+</ol>
+</li>
+<li>更新数据
+<ol>
+<li>当一些事情在应用中发生，如用户点击了某个按钮，会创建 Action；</li>
+<li>分发 Action 到 Redux Store，代码类似 <code>dispatch({type:&quot;counter/increment&quot;})</code>;</li>
+<li>Store 再次执行 reducer 函数，通过之前的 <code>state</code> 和 <code>action</code> 完成计算、存储并返回新的 <code>state</code>；</li>
+<li>Store 通知所有订阅了 Store 数据变更消息的 View 组件；</li>
+<li>每个依赖 <code>state</code> 数据的 View 组件都会对 <code>state</code> 数据进行检查，以确定是否需要重新渲染自己；</li>
+<li>需要重新渲染的组件使用新数据完成渲染。</li>
+</ol>
+</li>
+</ol>
+<figure class="image-widget">
+    <a href="../dive-react-redux.files/ReduxDataFlowDiagram.gif" target="_blank"><img src="../dive-react-redux.files/ReduxDataFlowDiagram.gif" alt=""></a>
+    
+</figure>
+<h2 id="react-redux">React-redux</h2>
+<p>Redux 本身是一个独立的库，可与任何 UI 层或框架一起使用，通常需要使用 <strong>UI 绑定库</strong> 将 Redux 与 UI 框架绑定在一起，而不是通过 UI 代码直接与 <strong>Store</strong> 进行交互。
+React Redux 是 React 的官方 Redux UI 绑定库，它使得 React 组件可以从 Redux store 读取数据或分发 <code>action</code> 到 <strong>Store</strong> 以更新 <code>state</code>。</p>
+<h3 id="51-provider">5.1 Provider</h3>
+<p>React Redux 提供了一个 <code>&lt;Provider /&gt;</code> 组件，将 <strong>store</strong> 对象以 props 形式注入到组件中，可以使其所有子组件中均可访问到 store 对象。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s1">&#39;react&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="nx">ReactDOM</span> <span class="nx">from</span> <span class="s1">&#39;react-dom&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">Provider</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;react-redux&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="nx">store</span> <span class="nx">from</span> <span class="s1">&#39;./store&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="nx">App</span> <span class="nx">from</span> <span class="s1">&#39;./App&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">rootElement</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;root&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">ReactDOM</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">  <span class="o">&lt;</span><span class="nx">Provider</span> <span class="nx">store</span><span class="o">=</span><span class="p">{</span><span class="nx">store</span><span class="p">}</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">&lt;</span><span class="nx">App</span> <span class="o">/&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="o">&lt;</span><span class="err">/Provider&gt;,</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">rootElement</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="52-connect">5.2 Connect</h3>
+<p>React Redux 通过名为 <code>connect</code> 的函数将组件和 <strong>store</strong> 对象进行链接，随后在组件内部能以 props 的形式访问 <code>dispatch</code> 和 <code>state</code>。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">connect</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;react-redux&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">increment</span><span class="p">,</span> <span class="nx">decrement</span><span class="p">,</span> <span class="nx">reset</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;./actionCreators&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">mapStateToProps</span> <span class="o">=</span> <span class="p">(</span><span class="nx">state</span> <span class="cm">/*, ownProps*/</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">counter</span><span class="o">:</span> <span class="nx">state</span><span class="p">.</span><span class="nx">counter</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">mapDispatchToProps</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">increment</span><span class="p">,</span> <span class="nx">decrement</span><span class="p">,</span> <span class="nx">reset</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kr">export</span> <span class="k">default</span> <span class="nx">connect</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">mapStateToProps</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">mapDispatchToProps</span>
+</span></span><span class="line"><span class="cl"><span class="p">)(</span><span class="nx">Counter</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="redux-toolkit">Redux Toolkit</h2>
+<p>Redux Toolkit 通过遵循 Redux 最佳实践，提供了良好的默认行为，捕获错误并允许您编写更简单的代码，使编写良好的 Redux 应用程序和加快开发速度变得更加容易。</p>
+<p>Redux Toolkit 提供了一系列实用功能，包括：</p>
+<ol>
+<li><code>configureStore()</code> —— 简化创建 Store 配置选项。它可以自动组合 Reducer slice，并加载常用中间件，如 <code>redux-thunk</code>，并默认启用哪个 <strong>Redux DevTools Extension</strong>；</li>
+<li><code>createReducer()</code> —— 内部自动使用 <code>immer</code> 简化了数据更新；</li>
+<li><code>createAction()</code> —— 为给定动作类型字符串创建 <strong>action creator</strong> 函数。</li>
+<li><code>createSlice</code> —— 接受一组配置信息，如 name、initialState。自动生成 action coretor；</li>
+<li><code>createSelector</code> —— 更加便捷的从 state 中导出需要的数据</li>
+</ol>
+<p>Redux Toolkit 不仅简化了很多操作流程，还提供了一系列 Hook，使得在 React 组件中与 Redux Store 交互变轻而易举。</p>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://redux.js.org">https://redux.js.org</a></li>
+<li><a href="https://react-redux.js.org">https://react-redux.js.org</a></li>
+<li><a href="https://facebook.github.io/flux/">https://facebook.github.io/flux/</a></li>
+</ul>
+
+            </article>
+
+            <div class="post-tag">
+                <strong>Tags:</strong>
+                
+                
+                <a href="https://gauliang.github.iotags/react">react</a>
+                
+                 / 
+                <a href="https://gauliang.github.iotags/redux">redux</a>
+                
+                 / 
+                <a href="https://gauliang.github.iotags/flux">flux</a>
+                
+                 / 
+                <a href="https://gauliang.github.iotags/javascript">javascript</a>
+                
+                 / 
+                <a href="https://gauliang.github.iotags/node.js">node.js</a>
+                
+                 / 
+                <a href="https://gauliang.github.iotags/redux-toolkit">redux-toolkit</a>
+                
+            </div>
+
+
+            <div class="next-and-prev-post">
+                
+                <a href="https://gauliang.github.io/blog/2020/dive-into-webpack/" class="prev-post">
+                    <i class="icon ti-arrow-left"></i>
+                    <div class="text">
+                        <div class="caption">2020-11-05 08:34:50</div>
+                        <div class="title">深入 Webpack</div>
+                    </div>
+                </a>
+                
+                
+                <a href="https://gauliang.github.io/blog/2020/throttle-and-debounce/" class="next-post">
+                    <div class="text">
+                        <div class="caption">2020-11-26 18:15:32</div>
+                        <div class="title">Throttling and Debounce</div>
+                    </div>
+                    <i class="icon ti-arrow-right"></i>
+                </a>
+                
+            </div>
+
+        </div>
+        <div class="col-xl-2 d-none d-xl-block">
+            
+            
+            <ul class="post-related">
+                
+                <li><a href="/blog/2020/javascript-closure/">Javascript Closure</a></li>
+                
+                <li><a href="/blog/2020/promise/">Javascript Promise</a></li>
+                
+                <li><a href="/blog/2020/commonjs-modules/">CommonJS Modules</a></li>
+                
+                <li><a href="/blog/2020/what-are-cjs-amd-umd-and-esm-in-javascript/">Javascript 模块化概述</a></li>
+                
+                <li><a href="/blog/2020/javascript-arrow-function-best-practices/">Javascript 箭头函数最佳实践[译]</a></li>
+                
+            </ul>
+            
+        </div>
+    </div>
+
+</div>
+
+        </div><footer class="page-footer">
+    <div class="container">
+        <div class="copyright">
+            <pre><code>$ echo "simple things scale." </code></pre>
+            <ul>
+                <li><a href="https://gauliang.github.io">Home page</a></li>
+                <li><a href="https://gauliang.github.io"><i class="ti-info-alt"></i> about</a></li>
+                <li><a href="https://github.com/gauliang" target="_blank"><i class="ti-github"></i> GitHub</a></li>
+            </ul>
+        </div>
+    </div>
+</footer>
+
+<a id="scroll-to-top" href="javascript:void(0);">Scroll to top</a>
+
+<script src="/vendor/jquery/jquery-3.4.1.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="/vendor/svgjs/svg.min.js"></script>
+<script src="/js/javascript.js"></script></body>
+</html>

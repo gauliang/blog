@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>闭包 on Gauliang</title>
+    <link>https://gauliang.github.io/tags/%E9%97%AD%E5%8C%85/</link>
+    <description>Recent content in 闭包 on Gauliang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Sun, 11 Oct 2020 18:45:55 +0800</lastBuildDate><atom:link href="https://gauliang.github.io/tags/%E9%97%AD%E5%8C%85/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Javascript Closure</title>
+      <link>https://gauliang.github.io/blog/2020/javascript-closure/</link>
+      <pubDate>Sun, 11 Oct 2020 18:45:55 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/javascript-closure/</guid>
+      <description>什么是闭包 定义 函数和与其相关的词法环境（lexical environment）一起构成闭包（closure）。 闭包可以让你从内部函数访问外部</description>
+    </item>
+    
+  </channel>
+</rss>

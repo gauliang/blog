@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>深入 Webpack - Gauliang</title>
+
+<link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="/vendor/themify-icons/themify-icons.css">
+
+
+<link rel="stylesheet" href="https://gauliang.github.io/scss/main.min.7f61b4e8391e65e8610cea419646501340197a41be59be698ae440173dcb74cb.css"><body data-spy="scroll" data-target="#table-of-contents"><header class="navigation" id="navigation">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg">
+            <a class="navbar-brand" href="/">
+                <img src="/logo.svg" alt="Gl">
+            </a>            
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="ti-menu"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">                    
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    
+                    
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/blog/">
+                            <span>博客</span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/series/">
+                            <span>系列</span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/tags/">
+                            <span>Tags</span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+            </div>
+        </nav>
+    </div>
+</header><div id="content">
+
+<header class="post-header">
+    <div class="container">
+        <h1 class="post-title">深入 Webpack</h1>
+        <div class="post-time">
+            Nov 5, 2020 by Gl
+        </div>
+    </div>
+</header>
+<div class="container">
+    <div class="row">
+        <div class="col-xl-2 col-lg-3 d-none d-xl-block d-lg-block">
+            <div class="table-of-contents" id="table-of-contents">
+                
+                <nav id="TableOfContents">
+  <ul>
+    <li><a class="nav-link"  href="#webpack-是什么">Webpack 是什么</a></li>
+    <li><a class="nav-link"  href="#entry--output">Entry &amp; Output</a>
+    </li>
+    <li><a class="nav-link"  href="#module">Module</a></li>
+    <li><a class="nav-link"  href="#loader">Loader</a></li>
+    <li><a class="nav-link"  href="#plugin">Plugin</a></li>
+    <li><a class="nav-link"  href="#mode">Mode</a></li>
+    <li><a class="nav-link"  href="#code-splitting">Code Splitting</a></li>
+    <li><a class="nav-link"  href="#hmr">HMR</a></li>
+    <li><a class="nav-link"  href="#treeshaking">treeshaking</a></li>
+    <li><a class="nav-link"  href="#性能优化">性能优化</a></li>
+    <li><a class="nav-link"  href="#参考">参考</a></li>
+  </ul>
+</nav>
+            </div>
+        </div>
+        <div class="col-xl-8 col-lg-9 post-content">
+            <div class="post-meta-count">
+                <i class="ti-info-alt"></i>
+                <strong>阅读全文约需 15 分钟</strong>
+            </div>
+            <article id="post-content">
+
+                
+                <p>前端生态蓬勃发展，各垂直领域都有众多设计精良的优秀项目，几乎在所有场景中，应用系统都不同程度依赖这些三方项目。
+同时，新的设计理念不断被提出并投入实践，应用程序本身也变的复杂起来。这为快速构建和部署项目带来了挑
+战，于是，很多用于工程化管理前端项目的工具诞生了，Webpack 正是这样一个工具。</p>
+<p>接下来，我们将深入探索 webpack ，本文假设你对 webpack 已有初步了解。</p>
+<h2 id="webpack-是什么">Webpack 是什么</h2>
+<p>从代码管理角度讲，webpack 是一个静态模块打包器，他将模块间的依赖关系换转成一个 chunk 图，此依赖图对应映射到
+项目所需的每个模块，并生成一个或多个 bundle。</p>
+<p>从应用程序角度讲，大多数情况下，网站不再只是用带有一些可选 JavaScript 的纯 HTML 编写，它们通常完全由 JavaScript
+构建。因此，我们必须将代码打包，最小化和翻译成所有浏览器都能理解的东西，这就是webpack的用武之地。</p>
+<p>webpack 还提供了一个开发服务器，可以在保存时即时更新模块和样式。<code>vue create</code> 并 <code>create-react-app</code> 依赖于后台的
+webpack，但是您可以轻松地为他们设置自己的 webpack 配置。</p>
+<h2 id="entry--output">Entry &amp; Output</h2>
+<p>Entry &amp; Output 是 webpack 的基本配置，指定程序入口点和输出信息。</p>
+<ol>
+<li><strong>entry</strong> 指定构建依赖图时的入口点，webpack 会从该点其，一次找出模块间的依赖关系。<br>
+默认值是 <code>./src/index.js</code>。</li>
+<li><strong>output</strong> 告诉 webpack 在哪里输出它所创建的 bundle，以及如何命名这些文件。<br>
+默认值是 <code>./dist/main.js</code>。</li>
+</ol>
+<p>配置 <code>webpack.config.js</code> 可改变上述默认行为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">entry</span><span class="o">:</span> <span class="s1">&#39;./path/to/my/entry/file.js&#39;</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">output</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">path</span><span class="o">:</span> <span class="nx">__dirname</span> <span class="o">+</span> <span class="s1">&#39;dist&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">filename</span><span class="o">:</span> <span class="s1">&#39;my-first-webpack.bundle.js&#39;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="chunk">Chunk</h3>
+<p>打包过程中，模块会被合并成 chunk。 chunk 合并成 chunk 组，并形成一个通过模块互相连接的图(ModuleGraph)。chunk 有两种形式：</p>
+<ul>
+<li>initial(初始化) 是入口起点的 main chunk。此 chunk 包含为入口起点指定的所有模块及其依赖项。</li>
+<li>non-initial 是可以延迟加载的块。可能会出现在使用 动态导入(dynamic imports) 或者 SplitChunksPlugin 时。</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="c1">// main.js
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&#34;react&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="nx">ReactDOM</span> <span class="nx">from</span> <span class="s2">&#34;react-dom&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kr">import</span><span class="p">(</span><span class="s2">&#34;./app&#34;</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">App</span><span class="p">=&gt;{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">ReactDOM</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">App</span> <span class="o">/&gt;</span><span class="p">,</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&#34;root&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># output</span>
+</span></span><span class="line"><span class="cl">/dist/main.js   - initial chunk       包含 react,react-dom,main.js
+</span></span><span class="line"><span class="cl">/dist/375.js    - non-initial chunk   包含 app.jsx
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="output">Output</h4>
+<p>输出文件的名称会受配置中的两个字段的影响：</p>
+<ol>
+<li><code>output.filename</code> - 用于 initial chunk 文件</li>
+<li><code>output.chunkFilename</code> - 用于 non-initial chunk 文件</li>
+<li>在某些情况下，使用 initial 和 non-initial 的 chunk 时，可以使用 output.filename。</li>
+</ol>
+<p>这些字段中会有一些 占位符。常用的占位符如下：</p>
+<ol>
+<li><code>[id]</code> - chunk id（例如 [id].js -&gt; 485.js）</li>
+<li><code>[name]</code> - chunk name（例如 [name].js -&gt; app.js）。如果 chunk 没有名称，则会使用其 id 作为名称</li>
+<li><code>[contenthash]</code> - 输出文件内容的 md4-hash（例如 [contenthash].js -&gt; 4ea6ff1de66c537eb9b2.js）</li>
+</ol>
+<h2 id="module">Module</h2>
+<p>通常，当我们提及模块，一般是指 Javascript 模块。在 webpack 语境下，模块可以是任何东西。下面是一些示例：</p>
+<ol>
+<li>ES2015 import 语句</li>
+<li>CommonJS require() 语句</li>
+<li>AMD define 和 require 语句</li>
+<li>css/sass/less 文件中的 @import 语句。</li>
+<li>stylesheet url(&hellip;) 或者 HTML <code>&lt;img src=...&gt;</code> 文件中的图片链接。</li>
+</ol>
+<p>webpack 原生支持如下模块类型：</p>
+<ol>
+<li>ECMAScript 模块</li>
+<li>CommonJS 模块</li>
+<li>AMD 模块</li>
+<li>Assets</li>
+<li>WebAssembly 模块</li>
+</ol>
+<h2 id="loader">Loader</h2>
+<p>我们通过 <strong>loader</strong> 使 webpack 处理 <code>js</code> 和 <code>json</code> 之外任何类型的文件（模块），如后缀巍为<strong>ts</strong>、<strong>scss</strong>、<strong>jsx</strong> 和 <strong>vue</strong>。
+loader 向 webpack 描述了如何处理非原生模块，并将相关依赖引入到你的 bundles中。loader 有两个属性：</p>
+<ol>
+<li><code>test</code> 属性，识别出哪些文件会被转换。</li>
+<li><code>use</code> 属性，指出在进行转换时，应该使用哪个 loader。</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">path</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;path&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">output</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">filename</span><span class="o">:</span> <span class="s1">&#39;my-first-webpack.bundle.js&#39;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">module</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">rules</span><span class="o">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">      <span class="p">{</span> <span class="nx">test</span><span class="o">:</span> <span class="sr">/\.txt$/</span><span class="p">,</span> <span class="nx">use</span><span class="o">:</span> <span class="s1">&#39;raw-loader&#39;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">]</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="plugin">Plugin</h2>
+<p>webpack 插件是一个具有 apply 方法的 JavaScript 对象。与 loader(仅用于转换某些类型的模块)不同，插件的目的在于扩展 webpack 自身能力，其可以直接访问 compiler 对象，
+通常用于处理 loader 无法完成的其他工作，如打包优化、资源管理。</p>
+<h2 id="mode">Mode</h2>
+<p>webpack 有两种操作模式：开发(development)和生产(production)。 它们之间的主要区别是生产模式自动生成一些优化后的代码。</p>
+<h2 id="code-splitting">Code Splitting</h2>
+<p>代码分离能够把代码分离到不同的 bundle 中，然后按需加载或并行加载这些文件。常用的代码分离方法有三种：</p>
+<ol>
+<li>入口起点：entry 配置</li>
+<li>防止重复：SplitChunksPlugin 配置</li>
+<li>动态导入：通过模块的内联函数调用来分离代码。<code>import()</code> 或 <code>require.ensure()</code>；</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">mode</span><span class="o">:</span> <span class="s1">&#39;development&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 入口起点：entry 配置
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">entry</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">index</span><span class="o">:</span> <span class="s1">&#39;./src/index.js&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">another</span><span class="o">:</span> <span class="s1">&#39;./src/another-module.js&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">output</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">filename</span><span class="o">:</span> <span class="s1">&#39;[name].bundle.js&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">path</span><span class="o">:</span> <span class="nx">path</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">,</span> <span class="s1">&#39;dist&#39;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">optimization</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 防止重复：SplitChunksPlugin 配置
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">splitChunks</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">chunks</span><span class="o">:</span> <span class="s1">&#39;all&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="hmr">HMR</h2>
+<p>模块热替换(HMR - hot module replacement)功能会在应用程序运行过程中，替换、添加或删除 模块，而无需重新加载整个页面。主要是通过以下几种方式，来显著加快开发速度：</p>
+<ol>
+<li>保留在完全重新加载页面期间丢失的应用程序状态。</li>
+<li>只更新变更内容，以节省宝贵的开发时间。</li>
+<li>在源代码中 CSS/JS 产生修改时，会立刻在浏览器中进行更新，这几乎相当于在浏览器 devtools 直接更改样式。</li>
+</ol>
+<p><code>devServer.hot = true</code></p>
+<h2 id="treeshaking">treeshaking</h2>
+<p>使 treeshaking 生效需要满足以下条件：</p>
+<ol>
+<li>使用 ESM 规范</li>
+<li>配置 babel-loader 不将 EMS 转为 CMD</li>
+<li>运行在 production 模式</li>
+</ol>
+<p>注：在 webpack v4+ 将会在生产模式下，默认开启代码压缩。</p>
+<h2 id="性能优化">性能优化</h2>
+<p>可以从以下几个角度考虑优化构建性能：</p>
+<ol>
+<li>将 <code>webpack</code>、<code>npm</code>和<code>yarn</code> 更新到最新版本；</li>
+<li>将 loader 应用于最少数量的必要模块；</li>
+<li>每个额外的 loader/plugin 都有其启动时间。尽量少地使用工具；</li>
+<li>优化模块解析条目；</li>
+<li>使用 dll 插件为更改不频繁的代码生成单独的编译结果；</li>
+<li>尽量保持 chunk 体积小；使用数量更少/体积更小的 library；在多页面应用程序中使用 SplitChunksPlugin ，并开启 async 模式；移除未引用代码；只编译你当前正在开发的那些代码。</li>
+<li>worker 池</li>
+<li>持久化缓存</li>
+<li>移除 Progress plugin</li>
+<li>留意自定义 plugin/loader</li>
+<li>增量编译</li>
+<li>在内存中编译</li>
+<li>不同的 devtool 设置，会导致性能差异。</li>
+<li>避免在生产环境下才会用到的工具，某些 utility, plugin 和 loader 都只用于生产环境。</li>
+<li>最小化 entry chunk</li>
+<li>避免额外的优化步骤</li>
+<li>输出结果不携带路径信息</li>
+<li>为 TypeScript loader 传入 transpileOnly 选项，以缩短使用 ts-loader 时的构建时间。</li>
+</ol>
+<h2 id="参考">参考</h2>
+<p><a href="https://peerigon.github.io/talks/2018-09-28-hackerkiste-webpack-deep-dive">https://peerigon.github.io/talks/2018-09-28-hackerkiste-webpack-deep-dive</a>
+<a href="https://www.taniarascia.com/how-to-use-webpack/">https://www.taniarascia.com/how-to-use-webpack/</a></p>
+
+            </article>
+
+            <div class="post-tag">
+                <strong>Tags:</strong>
+                
+                
+                <a href="https://gauliang.github.iotags/webpack">webpack</a>
+                
+                 / 
+                <a href="https://gauliang.github.iotags/devops">devops</a>
+                
+                 / 
+                <a href="https://gauliang.github.iotags/node.js">node.js</a>
+                
+                 / 
+                <a href="https://gauliang.github.iotags/esm">esm</a>
+                
+            </div>
+
+
+            <div class="next-and-prev-post">
+                
+                <a href="https://gauliang.github.io/blog/2020/flex-layout/" class="prev-post">
+                    <i class="icon ti-arrow-left"></i>
+                    <div class="text">
+                        <div class="caption">2020-10-25 16:06:20</div>
+                        <div class="title">深入 Flexbox Layout</div>
+                    </div>
+                </a>
+                
+                
+                <a href="https://gauliang.github.io/blog/2020/dive-react-redux/" class="next-post">
+                    <div class="text">
+                        <div class="caption">2020-11-15 08:24:14</div>
+                        <div class="title">深入 React Redux</div>
+                    </div>
+                    <i class="icon ti-arrow-right"></i>
+                </a>
+                
+            </div>
+
+        </div>
+        <div class="col-xl-2 d-none d-xl-block">
+            
+            
+            <ul class="post-related">
+                
+                <li><a href="/blog/2020/what-are-cjs-amd-umd-and-esm-in-javascript/">Javascript 模块化概述</a></li>
+                
+                <li><a href="/blog/2020/javascript-closure/">Javascript Closure</a></li>
+                
+                <li><a href="/blog/2020/promise/">Javascript Promise</a></li>
+                
+                <li><a href="/blog/2020/git-rebase/">Git Rebase</a></li>
+                
+                <li><a href="/blog/2020/es-modules/">ECMAScript Modules</a></li>
+                
+            </ul>
+            
+        </div>
+    </div>
+
+</div>
+
+        </div><footer class="page-footer">
+    <div class="container">
+        <div class="copyright">
+            <pre><code>$ echo "simple things scale." </code></pre>
+            <ul>
+                <li><a href="https://gauliang.github.io">Home page</a></li>
+                <li><a href="https://gauliang.github.io"><i class="ti-info-alt"></i> about</a></li>
+                <li><a href="https://github.com/gauliang" target="_blank"><i class="ti-github"></i> GitHub</a></li>
+            </ul>
+        </div>
+    </div>
+</footer>
+
+<a id="scroll-to-top" href="javascript:void(0);">Scroll to top</a>
+
+<script src="/vendor/jquery/jquery-3.4.1.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="/vendor/svgjs/svg.min.js"></script>
+<script src="/js/javascript.js"></script></body>
+</html>

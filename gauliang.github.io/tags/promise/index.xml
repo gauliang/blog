@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>promise on Gauliang</title>
+    <link>https://gauliang.github.io/tags/promise/</link>
+    <description>Recent content in promise on Gauliang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Sun, 13 Sep 2020 20:00:24 +0800</lastBuildDate><atom:link href="https://gauliang.github.io/tags/promise/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Javascript Promise</title>
+      <link>https://gauliang.github.io/blog/2020/promise/</link>
+      <pubDate>Sun, 13 Sep 2020 20:00:24 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/promise/</guid>
+      <description>JavaScript 是单线程工作，这意味着两段脚本不能同时运行，而是必须一个接一个地运行。 操作其中一项任务会延迟其他任务。您可能已使用事件和回调来解决该问题。</description>
+    </item>
+    
+  </channel>
+</rss>

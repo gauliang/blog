@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>service-mesh on Gauliang</title>
+    <link>https://gauliang.github.io/tags/service-mesh/</link>
+    <description>Recent content in service-mesh on Gauliang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Sun, 09 Aug 2020 11:13:31 +0800</lastBuildDate><atom:link href="https://gauliang.github.io/tags/service-mesh/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>安装和配置 kubectl &amp; istioctl</title>
+      <link>https://gauliang.github.io/blog/2020/kubectl-and-istio/</link>
+      <pubDate>Sun, 09 Aug 2020 11:13:31 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/kubectl-and-istio/</guid>
+      <description>一、Kubectl kubectl 是 Kubernetes 的命令行工具，通过它可以对 Kubernetes 集群执行指定的命令。 通过 kubectl 你可以部署应用，检查和管理集群资源并查看日志等。 1. 安装 kubectl Linux ubuntu 系</description>
+    </item>
+    
+    <item>
+      <title>微服务 API 网关 KrakenD</title>
+      <link>https://gauliang.github.io/blog/2020/microservice-api-gateway-krakend/</link>
+      <pubDate>Sat, 11 Jan 2020 15:28:13 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/microservice-api-gateway-krakend/</guid>
+      <description>KrakenD 是用 Go 编写的开源高性能无状态、分布式、微服务 API 网关，其不仅可以轻松将客户端请求转发到后端服务，还具备强大的数据处理功能，支持转换、过滤、聚</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>devops on Gauliang</title>
+    <link>https://gauliang.github.io/tags/devops/</link>
+    <description>Recent content in devops on Gauliang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Thu, 05 Nov 2020 08:34:50 +0800</lastBuildDate><atom:link href="https://gauliang.github.io/tags/devops/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>深入 Webpack</title>
+      <link>https://gauliang.github.io/blog/2020/dive-into-webpack/</link>
+      <pubDate>Thu, 05 Nov 2020 08:34:50 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/dive-into-webpack/</guid>
+      <description>前端生态蓬勃发展，各垂直领域都有众多设计精良的优秀项目，几乎在所有场景中，应用系统都不同程度依赖这些三方项目。 同时，新的设计理念不断被提出并</description>
+    </item>
+    
+    <item>
+      <title>Git Rebase</title>
+      <link>https://gauliang.github.io/blog/2020/git-rebase/</link>
+      <pubDate>Sun, 13 Sep 2020 09:39:21 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/git-rebase/</guid>
+      <description>在 Git 中整合来自不同分支的修改主要有两种方法：merge 以及 rebase。 这两种整合方法的最终效果一致，但 rebase 使得提交历史更加整洁。 在查看一个经</description>
+    </item>
+    
+    <item>
+      <title>Gitlab CE Work Flow</title>
+      <link>https://gauliang.github.io/blog/2020/gitlab-ce-work-flow/</link>
+      <pubDate>Sat, 29 Aug 2020 08:09:15 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/gitlab-ce-work-flow/</guid>
+      <description>本系列文章旨在整理和规范 Gitlab-CE 在团队协作中的最佳应用建议。内容将覆盖工作流规范、CI、CD、WebHooks、ChatOps、Gitlab API</description>
+    </item>
+    
+  </channel>
+</rss>

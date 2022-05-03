@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>javascript on Gauliang</title>
+    <link>https://gauliang.github.io/tags/javascript/</link>
+    <description>Recent content in javascript on Gauliang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Thu, 26 Nov 2020 18:15:32 +0800</lastBuildDate><atom:link href="https://gauliang.github.io/tags/javascript/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Throttling and Debounce</title>
+      <link>https://gauliang.github.io/blog/2020/throttle-and-debounce/</link>
+      <pubDate>Thu, 26 Nov 2020 18:15:32 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/throttle-and-debounce/</guid>
+      <description>Throttle 节流是指，确保连续发生的事件（函数调用）按指定频率（时间间隔）触发执行器。 如：无论函数以什么频率被调用，均需确保在指定的时间区间内最大执行</description>
+    </item>
+    
+    <item>
+      <title>深入 React Redux</title>
+      <link>https://gauliang.github.io/blog/2020/dive-react-redux/</link>
+      <pubDate>Sun, 15 Nov 2020 08:24:14 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/dive-react-redux/</guid>
+      <description>要谈论 react-redux 得先从了解 flux 和 redux 开始，flux 本身是一种架构模式，redux 是一个实现了 Flux 架构模式的面向 JS 的通用状态管理器， react-redux 提供了一种机制使得我们</description>
+    </item>
+    
+    <item>
+      <title>Javascript Closure</title>
+      <link>https://gauliang.github.io/blog/2020/javascript-closure/</link>
+      <pubDate>Sun, 11 Oct 2020 18:45:55 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/javascript-closure/</guid>
+      <description>什么是闭包 定义 函数和与其相关的词法环境（lexical environment）一起构成闭包（closure）。 闭包可以让你从内部函数访问外部</description>
+    </item>
+    
+    <item>
+      <title>Javascript Promise</title>
+      <link>https://gauliang.github.io/blog/2020/promise/</link>
+      <pubDate>Sun, 13 Sep 2020 20:00:24 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/promise/</guid>
+      <description>JavaScript 是单线程工作，这意味着两段脚本不能同时运行，而是必须一个接一个地运行。 操作其中一项任务会延迟其他任务。您可能已使用事件和回调来解决该问题。</description>
+    </item>
+    
+    <item>
+      <title>ECMAScript Modules</title>
+      <link>https://gauliang.github.io/blog/2020/es-modules/</link>
+      <pubDate>Mon, 07 Sep 2020 17:14:01 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/es-modules/</guid>
+      <description>ES6 中首次内置了对模块的支持。从理论上讲，ECMAScript 模块应该在所有 JavaScript 环境中通用。实际上，浏览器仍然是ES模块的主要目标。 默认情况下，</description>
+    </item>
+    
+    <item>
+      <title>CommonJS Modules</title>
+      <link>https://gauliang.github.io/blog/2020/commonjs-modules/</link>
+      <pubDate>Sun, 06 Sep 2020 10:19:40 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/commonjs-modules/</guid>
+      <description>CommonJS Modules 在 ES2015（也被称为ES6） 标准之前，JavaScript语言没有模块化组织代码的原生方法，CommonJS 模块格式填补了这一空白。</description>
+    </item>
+    
+    <item>
+      <title>Javascript 模块化概述</title>
+      <link>https://gauliang.github.io/blog/2020/what-are-cjs-amd-umd-and-esm-in-javascript/</link>
+      <pubDate>Sat, 05 Sep 2020 16:04:37 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/what-are-cjs-amd-umd-and-esm-in-javascript/</guid>
+      <description>当我们提及模块化时，通常意味着是由一组高度分离的，不同的功能块存储在模块中组成的。 在可能的情况下，通过松散耦合消除依赖关系简化应用程序的可维</description>
+    </item>
+    
+    <item>
+      <title>Javascript 箭头函数最佳实践[译]</title>
+      <link>https://gauliang.github.io/blog/2020/javascript-arrow-function-best-practices/</link>
+      <pubDate>Sat, 05 Sep 2020 10:51:40 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/javascript-arrow-function-best-practices/</guid>
+      <description>Javascript 箭头函数最佳实践 英文原文： 5 Best Practices to Write Quality Arrow Functions 箭头函数的语法简洁明了，非常适合作为回调使用，这里介绍 5 个有关箭头函数的最佳实践。 一、箭头函数名</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Javascript 模块化概述 - Gauliang</title>
+
+<link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="/vendor/themify-icons/themify-icons.css">
+
+
+<link rel="stylesheet" href="https://gauliang.github.io/scss/main.min.7f61b4e8391e65e8610cea419646501340197a41be59be698ae440173dcb74cb.css"><body data-spy="scroll" data-target="#table-of-contents"><header class="navigation" id="navigation">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg">
+            <a class="navbar-brand" href="/">
+                <img src="/logo.svg" alt="Gl">
+            </a>            
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="ti-menu"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">                    
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    
+                    
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/blog/">
+                            <span>博客</span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/series/">
+                            <span>系列</span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/tags/">
+                            <span>Tags</span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+            </div>
+        </nav>
+    </div>
+</header><div id="content">
+
+<header class="post-header">
+    <div class="container">
+        <h1 class="post-title">Javascript 模块化概述</h1>
+        <div class="post-time">
+            Sep 5, 2020 by Gl
+        </div>
+    </div>
+</header>
+<div class="container">
+    <div class="row">
+        <div class="col-xl-2 col-lg-3 d-none d-xl-block d-lg-block">
+            <div class="table-of-contents" id="table-of-contents">
+                
+                <nav id="TableOfContents">
+  <ul>
+    <li><a class="nav-link"  href="#commonjs">CommonJS</a></li>
+    <li><a class="nav-link"  href="#amd">AMD</a></li>
+    <li><a class="nav-link"  href="#umd">UMD</a></li>
+    <li><a class="nav-link"  href="#esm">ESM</a></li>
+    <li><a class="nav-link"  href="#参考">参考</a></li>
+  </ul>
+</nav>
+            </div>
+        </div>
+        <div class="col-xl-8 col-lg-9 post-content">
+            <div class="post-meta-count">
+                <i class="ti-info-alt"></i>
+                <strong>阅读全文约需 5 分钟</strong>
+            </div>
+            <article id="post-content">
+
+                
+                <p>当我们提及<strong>模块化</strong>时，通常意味着是由一组高度分离的，不同的功能块存储在模块中组成的。
+在可能的情况下，通过松散耦合消除依赖关系简化应用程序的可维护性。
+本文概述集中流行的模块化规范，以便在不同应用场景中能够快速决策选型。</p>
+<h2 id="commonjs">CommonJS</h2>
+<p>CommonJS 是同步导入，主要用于服务器端，无法在浏览器中直接运行。
+导入 CJS 时，它将为你提供导入对象的副本，不支持 Tree-shaking。
+通过 <strong>require</strong> 和 <strong>exports</strong> 与模块系统交互。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="c1">//importing
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">doSomething</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./doSomething.js&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//exporting
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">doSomething</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// do something
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="amd">AMD</h2>
+<p>AMD 全称 Asynchronous Module Definition —— 异步模块定义，由 RequireJS 实现，可在浏览器直接使用，语法相对复杂。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="nx">define</span><span class="p">([</span><span class="s1">&#39;dep1&#39;</span><span class="p">,</span> <span class="s1">&#39;dep2&#39;</span><span class="p">],</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">dep1</span><span class="p">,</span> <span class="nx">dep2</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//Define the module value by returning a value.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{};</span>
+</span></span><span class="line"><span class="cl"><span class="p">});</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//Or
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// &#34;simplified CommonJS wrapping&#34; https://requirejs.org/docs/whyamd.html
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">define</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">require</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nx">dep1</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;dep1&#39;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">dep2</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;dep2&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{};</span>
+</span></span><span class="line"><span class="cl"><span class="p">});</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="umd">UMD</h2>
+<p>通用模块定义，可以在前端和后端工作。与 CJS 和 AMD 不同，UMD 更像是一种配置多个模块系统的模式。
+UMD 本质上创建了一种使用这两种方法之一的方式，同时还支持全局变量定义。结果就是，UMD 模块能够在客户端和服务器上工作。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">factory</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">define</span> <span class="o">===</span> <span class="s2">&#34;function&#34;</span> <span class="o">&amp;&amp;</span> <span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">define</span><span class="p">([</span><span class="s2">&#34;jquery&#34;</span><span class="p">,</span> <span class="s2">&#34;underscore&#34;</span><span class="p">],</span> <span class="nx">factory</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">exports</span> <span class="o">===</span> <span class="s2">&#34;object&#34;</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s2">&#34;jquery&#34;</span><span class="p">),</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&#34;underscore&#34;</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">root</span><span class="p">.</span><span class="nx">Requester</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">$</span><span class="p">,</span> <span class="nx">root</span><span class="p">.</span><span class="nx">_</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$</span><span class="p">,</span> <span class="nx">_</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// this is where I defined my module implementation
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nx">Requester</span> <span class="o">=</span> <span class="p">{</span> <span class="c1">// ... };
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">Requester</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}));</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="esm">ESM</h2>
+<p>ES 模块，在许多现代浏览器中均可使用。他具有类似 CJS 的简单语法和 AMD 的异步能力。支持模块的运行时/静态加载。
+由于 ES6 的静态模块结构，ESM 可以通过 tree-shaking 优化。允许像 Rollup 这样的打包程序删除不必要的代码，从而加快加载速度。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s1">&#39;react&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span><span class="nx">foo</span><span class="p">,</span> <span class="nx">bar</span><span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;./myLib&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kr">export</span> <span class="k">default</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// your Function
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="kr">export</span> <span class="kr">const</span> <span class="nx">function1</span><span class="p">()</span> <span class="p">{...};</span>
+</span></span><span class="line"><span class="cl"><span class="kr">export</span> <span class="kr">const</span> <span class="nx">function2</span><span class="p">()</span> <span class="p">{...};</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="参考">参考</h2>
+<ol>
+<li><a href="https://www.freecodecamp.org/news/anatomy-of-js-module-systems-and-building-libraries-fadcd8dbd0e/">https://www.freecodecamp.org/news/anatomy-of-js-module-systems-and-building-libraries-fadcd8dbd0e/</a></li>
+<li><a href="https://irian.to/blogs/what-are-cjs-amd-umd-and-esm-in-javascript/">https://irian.to/blogs/what-are-cjs-amd-umd-and-esm-in-javascript/</a></li>
+<li><a href="http://www.commonjs.org/">http://www.commonjs.org/</a></li>
+<li><a href="https://requirejs.org/">https://requirejs.org/</a></li>
+<li><a href="https://addyosmani.com/writing-modular-js/">https://addyosmani.com/writing-modular-js/</a></li>
+</ol>
+
+            </article>
+
+            <div class="post-tag">
+                <strong>Tags:</strong>
+                
+                
+                <a href="https://gauliang.github.iotags/javascript">javascript</a>
+                
+                 / 
+                <a href="https://gauliang.github.iotags/node.js">node.js</a>
+                
+                 / 
+                <a href="https://gauliang.github.iotags/CommonJS">CommonJS</a>
+                
+                 / 
+                <a href="https://gauliang.github.iotags/esm">esm</a>
+                
+                 / 
+                <a href="https://gauliang.github.iotags/amd">amd</a>
+                
+                 / 
+                <a href="https://gauliang.github.iotags/umd">umd</a>
+                
+            </div>
+
+
+            <div class="next-and-prev-post">
+                
+                <a href="https://gauliang.github.io/blog/2020/javascript-arrow-function-best-practices/" class="prev-post">
+                    <i class="icon ti-arrow-left"></i>
+                    <div class="text">
+                        <div class="caption">2020-09-05 10:51:40</div>
+                        <div class="title">Javascript 箭头函数最佳实践[译]</div>
+                    </div>
+                </a>
+                
+                
+                <a href="https://gauliang.github.io/blog/2020/commonjs-modules/" class="next-post">
+                    <div class="text">
+                        <div class="caption">2020-09-06 10:19:40</div>
+                        <div class="title">CommonJS Modules</div>
+                    </div>
+                    <i class="icon ti-arrow-right"></i>
+                </a>
+                
+            </div>
+
+        </div>
+        <div class="col-xl-2 d-none d-xl-block">
+            
+            
+            <ul class="post-related">
+                
+                <li><a href="/blog/2020/javascript-arrow-function-best-practices/">Javascript 箭头函数最佳实践[译]</a></li>
+                
+            </ul>
+            
+        </div>
+    </div>
+
+</div>
+
+        </div><footer class="page-footer">
+    <div class="container">
+        <div class="copyright">
+            <pre><code>$ echo "simple things scale." </code></pre>
+            <ul>
+                <li><a href="https://gauliang.github.io">Home page</a></li>
+                <li><a href="https://gauliang.github.io"><i class="ti-info-alt"></i> about</a></li>
+                <li><a href="https://github.com/gauliang" target="_blank"><i class="ti-github"></i> GitHub</a></li>
+            </ul>
+        </div>
+    </div>
+</footer>
+
+<a id="scroll-to-top" href="javascript:void(0);">Scroll to top</a>
+
+<script src="/vendor/jquery/jquery-3.4.1.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="/vendor/svgjs/svg.min.js"></script>
+<script src="/js/javascript.js"></script></body>
+</html>

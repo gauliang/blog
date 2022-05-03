@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>umd on Gauliang</title>
+    <link>https://gauliang.github.io/tags/umd/</link>
+    <description>Recent content in umd on Gauliang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Sat, 05 Sep 2020 16:04:37 +0800</lastBuildDate><atom:link href="https://gauliang.github.io/tags/umd/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Javascript 模块化概述</title>
+      <link>https://gauliang.github.io/blog/2020/what-are-cjs-amd-umd-and-esm-in-javascript/</link>
+      <pubDate>Sat, 05 Sep 2020 16:04:37 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/what-are-cjs-amd-umd-and-esm-in-javascript/</guid>
+      <description>当我们提及模块化时，通常意味着是由一组高度分离的，不同的功能块存储在模块中组成的。 在可能的情况下，通过松散耦合消除依赖关系简化应用程序的可维</description>
+    </item>
+    
+  </channel>
+</rss>

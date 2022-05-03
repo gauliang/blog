@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Throttling and Debounce - Gauliang</title>
+
+<link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="/vendor/themify-icons/themify-icons.css">
+
+
+<link rel="stylesheet" href="https://gauliang.github.io/scss/main.min.7f61b4e8391e65e8610cea419646501340197a41be59be698ae440173dcb74cb.css"><body data-spy="scroll" data-target="#table-of-contents"><header class="navigation" id="navigation">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg">
+            <a class="navbar-brand" href="/">
+                <img src="/logo.svg" alt="Gl">
+            </a>            
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="ti-menu"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">                    
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    
+                    
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/blog/">
+                            <span>博客</span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/series/">
+                            <span>系列</span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/tags/">
+                            <span>Tags</span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+            </div>
+        </nav>
+    </div>
+</header><div id="content">
+
+<header class="post-header">
+    <div class="container">
+        <h1 class="post-title">Throttling and Debounce</h1>
+        <div class="post-time">
+            Nov 26, 2020 by Gl
+        </div>
+    </div>
+</header>
+<div class="container">
+    <div class="row">
+        <div class="col-xl-2 col-lg-3 d-none d-xl-block d-lg-block">
+            <div class="table-of-contents" id="table-of-contents">
+                
+                <nav id="TableOfContents">
+  <ul>
+    <li><a class="nav-link"  href="#throttle">Throttle</a></li>
+    <li><a class="nav-link"  href="#debounce">Debounce</a></li>
+  </ul>
+</nav>
+            </div>
+        </div>
+        <div class="col-xl-8 col-lg-9 post-content">
+            <div class="post-meta-count">
+                <i class="ti-info-alt"></i>
+                <strong>阅读全文约需 11 分钟</strong>
+            </div>
+            <article id="post-content">
+
+                
+                <h2 id="throttle">Throttle</h2>
+<p>节流是指，确保连续发生的事件（函数调用）按指定频率（时间间隔）触发执行器。
+如：无论函数以什么频率被调用，均需确保在指定的时间区间内最大执行次数不超过 1 次。</p>
+<p>根据上述需求，需要缓存一个时间戳，每次函数执行时用当前时间戳与缓存时间戳进行比对，
+如果间隔大于指定要求，则更新缓存的时间戳并执行函数。接下来，我们来完成代码实现。</p>
+<ol>
+<li>定义一个高阶函数，在初始化的时候缓存时间戳；</li>
+<li>定义并返回节流函数，该函数每次被调用时，根据当前事件戳和缓存时间戳的情况来决策如何执行。</li>
+</ol>
+<p>多数场景下，节流函数会与 DOM 事件一起使用，因此需要注意 <code>this</code> 的指向问题和 <code>arguments</code> 信息的透传。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm"> * Throttle
+</span></span></span><span class="line"><span class="cl"><span class="cm"> * @param executor {Functioin} 执行器
+</span></span></span><span class="line"><span class="cl"><span class="cm"> * @param time {Number} 单位毫秒
+</span></span></span><span class="line"><span class="cl"><span class="cm"> */</span>
+</span></span><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">Throttle</span><span class="p">(</span><span class="nx">executor</span><span class="p">,</span> <span class="nx">time</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">let</span> <span class="nx">prev</span> <span class="o">=</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kd">let</span> <span class="nx">now</span> <span class="o">=</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="nx">now</span> <span class="o">-</span> <span class="nx">prev</span> <span class="o">&gt;</span> <span class="nx">time</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// 运行执行器,需要注意两个细节：
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="c1">// 1. 指定 this
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="c1">// 2. 透传函数调用参数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="nx">executor</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,...</span><span class="nx">arguments</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">prev</span> <span class="o">=</span> <span class="nx">now</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>接下来，创建一个 <code>HTML</code> 文件，内容如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl">...
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;app&#34;</span><span class="p">&gt;&lt;</span><span class="nt">h2</span><span class="p">&gt;</span>Throttle<span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">...
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>我们为页面中 <code>&lt;div id=&quot;app&quot;&gt;</code> 元素绑定 <code>mousemove</code> 事件，当鼠标在其上面移动，
+打印函数执行时间、事件类型以及触发事件的 HTML 元素。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">handle</span> <span class="o">=</span> <span class="nx">Throttle</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`[</span><span class="si">${</span><span class="nb">Date</span><span class="p">()</span><span class="si">}</span><span class="sb">]`</span><span class="p">,</span> <span class="s1">&#39;throttle&#39;</span><span class="p">,</span> <span class="nx">event</span><span class="p">.</span><span class="nx">type</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">},</span> <span class="mi">1000</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;app&#39;</span><span class="p">).</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&#34;mousemove&#34;</span><span class="p">,</span> <span class="nx">handle</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>打开页面，鼠标在 <code>#app</code> 上移动，将看到类似下面的输出：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="o">[</span>Thu Nov <span class="m">26</span> <span class="m">2020</span> 19：50:33<span class="o">]</span> throttle mousemove &lt;div <span class="nv">id</span><span class="o">=</span>​<span class="s2">&#34;app&#34;</span>&gt;​…​&lt;/div&gt;​
+</span></span><span class="line"><span class="cl"><span class="o">[</span>Thu Nov <span class="m">26</span> <span class="m">2020</span> 19：50:34<span class="o">]</span> throttle mousemove &lt;div <span class="nv">id</span><span class="o">=</span>​<span class="s2">&#34;app&#34;</span>&gt;​…​&lt;/div&gt;​
+</span></span><span class="line"><span class="cl"><span class="o">[</span>Thu Nov <span class="m">26</span> <span class="m">2020</span> 19：50:35<span class="o">]</span> throttle mousemove &lt;div <span class="nv">id</span><span class="o">=</span>​<span class="s2">&#34;app&#34;</span>&gt;​…​&lt;/div&gt;​
+</span></span><span class="line"><span class="cl"><span class="o">[</span>Thu Nov <span class="m">26</span> <span class="m">2020</span> 19：50:36<span class="o">]</span> throttle mousemove &lt;div <span class="nv">id</span><span class="o">=</span>​<span class="s2">&#34;app&#34;</span>&gt;​…​&lt;/div&gt;​
+</span></span><span class="line"><span class="cl"><span class="o">[</span>Thu Nov <span class="m">26</span> <span class="m">2020</span> 19：50:37<span class="o">]</span> throttle mousemove &lt;div <span class="nv">id</span><span class="o">=</span>​<span class="s2">&#34;app&#34;</span>&gt;​…​&lt;/div&gt;​
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Executor 根据节流配置(<code>1000ms</code>)均匀执行，成功打印事件类型，同时也通过 <code>this</code> 读取到了绑定事件的元素信息。</p>
+<h2 id="debounce">Debounce</h2>
+<p>防抖是指，事件发生（函数调用）后，在指定时间内，同样的操作只有最后一次会生效。</p>
+<p>根据上述需求，可以缓存一个定时器，每次函数执行时判断定时器状态，如果定时器尚未执行，则重置定时器。接下来，我们来完成代码实现。</p>
+<ol>
+<li>定义一个高阶函数，声明一个缓存定时器的变量；</li>
+<li>定义并返回节流函数，该函数每次被调用时，根据已缓存的定时器状态决策如何执行。</li>
+</ol>
+<p>多数场景下，节流函数会与 DOM 事件一起使用，因此需要注意 <code>this</code> 的指向问题和 <code>arguments</code> 信息的透传。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm"> * Debounce
+</span></span></span><span class="line"><span class="cl"><span class="cm"> * @param executor {Functioin} 执行器
+</span></span></span><span class="line"><span class="cl"><span class="cm"> * @param time {Number} 单位毫秒
+</span></span></span><span class="line"><span class="cl"><span class="cm"> */</span>
+</span></span><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">Debounce</span><span class="p">(</span><span class="nx">executor</span><span class="p">,</span> <span class="nx">time</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kd">let</span> <span class="nx">timer</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="nx">timer</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">clearTimeout</span><span class="p">(</span><span class="nx">timer</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 运行执行器,需要注意两个细节：
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// 1. 指定 this
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// 2. 透传函数调用参数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">timer</span> <span class="o">=</span> <span class="nx">setTimeout</span><span class="p">(</span><span class="nx">executor</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="p">...</span><span class="nx">arguments</span><span class="p">),</span> <span class="nx">time</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>接下来，创建一个 HTML 文件，内容如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl">...
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;app&#34;</span><span class="p">&gt;&lt;</span><span class="nt">h2</span><span class="p">&gt;</span>Debounce<span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">...
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>为页面中 <code>&lt;div id=&quot;app&quot;&gt;</code> 元素绑定 <code>mousemove</code> 事件，当鼠标在其上面移动， 打印函数执行时间、事件类型以及触发事件的 HTML 元素。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">handle</span> <span class="o">=</span> <span class="nx">Debounce</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`[</span><span class="si">${</span><span class="nb">Date</span><span class="p">()</span><span class="si">}</span><span class="sb">]`</span><span class="p">,</span><span class="s1">&#39;debounce&#39;</span><span class="p">,</span><span class="nx">event</span><span class="p">.</span><span class="nx">type</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">},</span> <span class="mi">300</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;app&#39;</span><span class="p">).</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&#34;mousemove&#34;</span><span class="p">,</span> <span class="nx">handle</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>打开页面，鼠标在 <code>#app</code> 上移动，将看到类似下面的输出：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="o">[</span>Thu Nov <span class="m">26</span> <span class="m">2020</span> 19:49:46<span class="o">]</span> debounce mousemove &lt;div <span class="nv">id</span><span class="o">=</span>​<span class="s2">&#34;app&#34;</span>&gt;​…​&lt;/div&gt;​
+</span></span><span class="line"><span class="cl"><span class="o">[</span>Thu Nov <span class="m">26</span> <span class="m">2020</span> 19:49:48<span class="o">]</span> debounce mousemove &lt;div <span class="nv">id</span><span class="o">=</span>​<span class="s2">&#34;app&#34;</span>&gt;​…​&lt;/div&gt;​
+</span></span><span class="line"><span class="cl"><span class="o">[</span>Thu Nov <span class="m">26</span> <span class="m">2020</span> 19:49:52<span class="o">]</span> debounce mousemove &lt;div <span class="nv">id</span><span class="o">=</span>​<span class="s2">&#34;app&#34;</span>&gt;​…​&lt;/div&gt;​
+</span></span><span class="line"><span class="cl"><span class="o">[</span>Thu Nov <span class="m">26</span> <span class="m">2020</span> 19:49:56<span class="o">]</span> debounce mousemove &lt;div <span class="nv">id</span><span class="o">=</span>​<span class="s2">&#34;app&#34;</span>&gt;​…​&lt;/div&gt;​
+</span></span><span class="line"><span class="cl"><span class="o">[</span>Thu Nov <span class="m">26</span> <span class="m">2020</span> 19:49:59<span class="o">]</span> debounce mousemove &lt;div <span class="nv">id</span><span class="o">=</span>​<span class="s2">&#34;app&#34;</span>&gt;​…​&lt;/div&gt;​
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Executor 根据防抖配置(300ms)，对我们的连续操作进行了延时，并合并执行，成功打印事件类型，同时也通过 this 读取到了绑定事件的元素信息。</p>
+
+            </article>
+
+            <div class="post-tag">
+                <strong>Tags:</strong>
+                
+                
+                <a href="https://gauliang.github.iotags/debounce">debounce</a>
+                
+                 / 
+                <a href="https://gauliang.github.iotags/throttle">throttle</a>
+                
+                 / 
+                <a href="https://gauliang.github.iotags/javascript">javascript</a>
+                
+            </div>
+
+
+            <div class="next-and-prev-post">
+                
+                <a href="https://gauliang.github.io/blog/2020/dive-react-redux/" class="prev-post">
+                    <i class="icon ti-arrow-left"></i>
+                    <div class="text">
+                        <div class="caption">2020-11-15 08:24:14</div>
+                        <div class="title">深入 React Redux</div>
+                    </div>
+                </a>
+                
+                
+            </div>
+
+        </div>
+        <div class="col-xl-2 d-none d-xl-block">
+            
+            
+            <ul class="post-related">
+                
+                <li><a href="/blog/2020/dive-react-redux/">深入 React Redux</a></li>
+                
+                <li><a href="/blog/2020/javascript-closure/">Javascript Closure</a></li>
+                
+                <li><a href="/blog/2020/promise/">Javascript Promise</a></li>
+                
+                <li><a href="/blog/2020/es-modules/">ECMAScript Modules</a></li>
+                
+                <li><a href="/blog/2020/commonjs-modules/">CommonJS Modules</a></li>
+                
+            </ul>
+            
+        </div>
+    </div>
+
+</div>
+
+        </div><footer class="page-footer">
+    <div class="container">
+        <div class="copyright">
+            <pre><code>$ echo "simple things scale." </code></pre>
+            <ul>
+                <li><a href="https://gauliang.github.io">Home page</a></li>
+                <li><a href="https://gauliang.github.io"><i class="ti-info-alt"></i> about</a></li>
+                <li><a href="https://github.com/gauliang" target="_blank"><i class="ti-github"></i> GitHub</a></li>
+            </ul>
+        </div>
+    </div>
+</footer>
+
+<a id="scroll-to-top" href="javascript:void(0);">Scroll to top</a>
+
+<script src="/vendor/jquery/jquery-3.4.1.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="/vendor/svgjs/svg.min.js"></script>
+<script src="/js/javascript.js"></script></body>
+</html>

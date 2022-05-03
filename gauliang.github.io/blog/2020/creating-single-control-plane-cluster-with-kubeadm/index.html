@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>使用 kubeadm 安装单控制平面 Kubernetes 集群 - Gauliang</title>
+
+<link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="/vendor/themify-icons/themify-icons.css">
+
+
+<link rel="stylesheet" href="https://gauliang.github.io/scss/main.min.7f61b4e8391e65e8610cea419646501340197a41be59be698ae440173dcb74cb.css"><body data-spy="scroll" data-target="#table-of-contents"><header class="navigation" id="navigation">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg">
+            <a class="navbar-brand" href="/">
+                <img src="/logo.svg" alt="Gl">
+            </a>            
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="ti-menu"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">                    
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    
+                    
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/blog/">
+                            <span>博客</span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/series/">
+                            <span>系列</span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/tags/">
+                            <span>Tags</span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+            </div>
+        </nav>
+    </div>
+</header><div id="content">
+
+<header class="post-header">
+    <div class="container">
+        <h1 class="post-title">使用 kubeadm 安装单控制平面 Kubernetes 集群</h1>
+        <div class="post-time">
+            Jan 19, 2020 by Gl
+        </div>
+    </div>
+</header>
+<div class="container">
+    <div class="row">
+        <div class="col-xl-2 col-lg-3 d-none d-xl-block d-lg-block">
+            <div class="table-of-contents" id="table-of-contents">
+                
+                <nav id="TableOfContents">
+  <ul>
+    <li><a class="nav-link"  href="#一拓扑结构">一、拓扑结构</a></li>
+    <li><a class="nav-link"  href="#二准备工作">二、准备工作</a>
+    </li>
+    <li><a class="nav-link"  href="#三部署控制平面节点">三、部署控制平面节点</a>
+    </li>
+    <li><a class="nav-link"  href="#四加入工作节点">四、加入工作节点</a>
+    </li>
+    <li><a class="nav-link"  href="#五安装-dashboard">五、安装 Dashboard</a></li>
+    <li><a class="nav-link"  href="#六inress-nginx">六、Inress-nginx</a></li>
+    <li><a class="nav-link"  href="#七访问-dashboard">七、访问 Dashboard</a></li>
+    <li><a class="nav-link"  href="#八完成">八、完成</a></li>
+  </ul>
+</nav>
+            </div>
+        </div>
+        <div class="col-xl-8 col-lg-9 post-content">
+            <div class="post-meta-count">
+                <i class="ti-info-alt"></i>
+                <strong>阅读全文约需 25 分钟</strong>
+            </div>
+            <article id="post-content">
+
+                
+                <figure class="image-widget">
+    <a href="../creating-single-control-plane-cluster-with-kubeadm.files/cover.png" target="_blank"><img src="../creating-single-control-plane-cluster-with-kubeadm.files/cover.png" alt="部署单控制平面 k8s 集群，并安装 Dashboard 和 ingress-nginx 使外部浏览器可以访问集群。"></a>
+    <figcaption>部署单控制平面 k8s 集群，并安装 Dashboard 和 ingress-nginx 使外部浏览器可以访问集群。</figcaption>
+</figure>
+<h2 id="一拓扑结构">一、拓扑结构</h2>
+<p>本文主要介绍如何使用 kubeadm 安装部署单控制平面 Kubernetes v1.17.0 集群，所谓单控制平面，顾名思义就是由一个 Control-plane Node 和多个 Work Node 组成的 Kubernetes 集群。高可用集群与此不同，其由多个 Control-plane Node 和多个 Work Node 组成，高可用集群部署中，根据 etcd 数据库部署位置的不同，又分为栈内 etcd 数据库部署和外部独立 etcd 数据库集群部署两种模式。
+下面展示了不同部署模式的拓扑结构：</p>
+<figure class="image-widget">
+    <a href="../creating-single-control-plane-cluster-with-kubeadm.files/kubeadm-scp-topology.svg" target="_blank"><img src="../creating-single-control-plane-cluster-with-kubeadm.files/kubeadm-scp-topology.svg" alt="单控制平面拓扑结构"></a>
+    <figcaption>单控制平面拓扑结构</figcaption>
+</figure>
+<figure class="image-widget">
+    <a href="../creating-single-control-plane-cluster-with-kubeadm.files/kubeadm-ha-topology-stacked-etcd.svg" target="_blank"><img src="../creating-single-control-plane-cluster-with-kubeadm.files/kubeadm-ha-topology-stacked-etcd.svg" alt="高可用拓扑结构（栈内 etcd 数据库）"></a>
+    <figcaption>高可用拓扑结构（栈内 etcd 数据库）</figcaption>
+</figure>
+<figure class="image-widget">
+    <a href="../creating-single-control-plane-cluster-with-kubeadm.files/kubeadm-ha-topology-external-etcd.svg" target="_blank"><img src="../creating-single-control-plane-cluster-with-kubeadm.files/kubeadm-ha-topology-external-etcd.svg" alt="高可用拓扑结构（外部独立 etcd 数据库集群）"></a>
+    <figcaption>高可用拓扑结构（外部独立 etcd 数据库集群）</figcaption>
+</figure>
+<p>高可用部署与单控制平面部署不同，不过，除负载均衡及多 kube-apiserver 部分外，其他流程大同小异。有关高可用安装的更多信息请参考 <a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/">Creating Highly Available clusters with kubeadm</a>。</p>
+<h2 id="二准备工作">二、准备工作</h2>
+<p>硬件要求，建议 4 核以上 CPU，8GB 以上内存，Ubuntu 16.04 以上或 CentOS 7 以上版本的操作系统，确保所有服务器间网络通信正常，1 台服务器作为控制平面节点，其余若干台服务器作为工作节点，我这里准备了4个工作节点。基本信息如下：</p>
+<div class="table-responsive"><table class="table">
+<thead>
+<tr>
+<th>名称</th>
+<th>CPU</th>
+<th>内存</th>
+<th>IP</th>
+<th>OS</th>
+<th>安装</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPN-1</td>
+<td>4U</td>
+<td>8GB</td>
+<td>10.163.10.6</td>
+<td>ubuntu18.04</td>
+<td>docker , kubeadm, kubelet , kubectl</td>
+<td>Control Plane Node</td>
+</tr>
+<tr>
+<td>WN-1</td>
+<td>4U</td>
+<td>8GB</td>
+<td>10.163.10.7</td>
+<td>ubuntu18.04</td>
+<td>docker , kubeadm, kubelet</td>
+<td>Worker Node</td>
+</tr>
+<tr>
+<td>WN-2</td>
+<td>4U</td>
+<td>8GB</td>
+<td>10.163.10.8</td>
+<td>ubuntu18.04</td>
+<td>docker , kubeadm, kubelet</td>
+<td>Worker Node</td>
+</tr>
+<tr>
+<td>WN-2</td>
+<td>4U</td>
+<td>8GB</td>
+<td>10.163.10.9</td>
+<td>ubuntu18.04</td>
+<td>docker , kubeadm, kubelet</td>
+<td>Worker Node</td>
+</tr>
+<tr>
+<td>WN-2</td>
+<td>4U</td>
+<td>8GB</td>
+<td>10.163.10.10</td>
+<td>ubuntu18.04</td>
+<td>docker , kubeadm, kubelet</td>
+<td>Worker Node</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="安装-docker">安装 docker</h3>
+<p>K8S 支持多种容器运行时环境，我们选择 docker，首先为所有节点服务器安装 docker，目前 kubernetes 最新版(v1.17.0) 可以完全兼容支持的 docker 最高版本为 v19.03，我们选择 Docker 的最新稳定版本 v19.03 作为容器运行时环境。安装细节可参考 <a href="https://docs.docker.com/install/linux/docker-ce/ubuntu/">Get Docker Engine - Community for Ubuntu</a>。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 删除旧版本docker</span>
+</span></span><span class="line"><span class="cl">$ sudo apt-get remove docker docker-engine docker.io containerd runc
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 更新 apt </span>
+</span></span><span class="line"><span class="cl">$ sudo apt-get update
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 安装工具包</span>
+</span></span><span class="line"><span class="cl">$ sudo apt-get install <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    apt-transport-https <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    ca-certificates <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    curl <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    gnupg-agent <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    software-properties-common
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 添加Docker官方 GPG key</span>
+</span></span><span class="line"><span class="cl">$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg <span class="p">|</span> sudo apt-key add -
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 添加 stable apt 源</span>
+</span></span><span class="line"><span class="cl">$ sudo add-apt-repository <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>   <span class="s2">&#34;deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+</span></span></span><span class="line"><span class="cl"><span class="s2">   </span><span class="k">$(</span>lsb_release -cs<span class="k">)</span><span class="s2"> \
+</span></span></span><span class="line"><span class="cl"><span class="s2">   stable&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 安装 Docker CE</span>
+</span></span><span class="line"><span class="cl">$ sudo apt-get update
+</span></span><span class="line"><span class="cl">$ sudo apt-get install <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  containerd.io<span class="o">=</span>1.2.10-3 <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  docker-ce<span class="o">=</span>5:19.03.4~3-0~ubuntu-<span class="k">$(</span>lsb_release -cs<span class="k">)</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  docker-ce-cli<span class="o">=</span>5:19.03.4~3-0~ubuntu-<span class="k">$(</span>lsb_release -cs<span class="k">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>如果你的网络环境从官方仓库安装速度较慢，可以使用阿里云镜像仓库安装。步骤如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># step 1: 安装必要的一些系统工具</span>
+</span></span><span class="line"><span class="cl">sudo apt-get update
+</span></span><span class="line"><span class="cl">sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># step 2: 安装GPG证书</span>
+</span></span><span class="line"><span class="cl">curl -fsSL http://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg <span class="p">|</span> sudo apt-key add -
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Step 3: 写入软件源信息</span>
+</span></span><span class="line"><span class="cl">sudo add-apt-repository <span class="s2">&#34;deb [arch=amd64] http://mirrors.aliyun.com/docker-ce/linux/ubuntu </span><span class="k">$(</span>lsb_release -cs<span class="k">)</span><span class="s2"> stable&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Step 4: 更新并安装 Docker-CE</span>
+</span></span><span class="line"><span class="cl">sudo apt-get -y update
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Step 5: 选择安装版本</span>
+</span></span><span class="line"><span class="cl">apt-cache madison docker-ce
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Step 6: 安装</span>
+</span></span><span class="line"><span class="cl">$ sudo apt-get update
+</span></span><span class="line"><span class="cl">$ sudo apt-get install <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  containerd.io<span class="o">=</span>1.2.10-3 <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  docker-ce<span class="o">=</span>5:19.03.4~3-0~ubuntu-<span class="k">$(</span>lsb_release -cs<span class="k">)</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  docker-ce-cli<span class="o">=</span>5:19.03.4~3-0~ubuntu-<span class="k">$(</span>lsb_release -cs<span class="k">)</span>  
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="后续操作">后续操作</h3>
+<p><strong>1、当前用户加入&quot;docker&quot;用户组</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ sudo usermod -aG docker <span class="nv">$USER</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>2、 配置 cgroup 驱动为 systemd，同时，增加 docker 仓库镜像配置。</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1">#  创建文件 /etc/docker/daemon.json ，内容如下：</span>
+</span></span><span class="line"><span class="cl"><span class="o">{</span>
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;exec-opts&#34;</span>: <span class="o">[</span><span class="s2">&#34;native.cgroupdriver=systemd&#34;</span><span class="o">]</span>,
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;registry-mirrors&#34;</span>: <span class="o">[</span><span class="s2">&#34;https://docker.mirrors.ustc.edu.cn/&#34;</span><span class="o">]</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>3、重启服务生效配置</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo systemctl daemon-reload
+</span></span><span class="line"><span class="cl">sudo systemctl restart docker.service
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>4、检查配置是否生效</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">docker info <span class="p">|</span> grep Cgroup
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ECHO ------</span>
+</span></span><span class="line"><span class="cl">Cgroup Driver: systemd
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="关闭-swap">关闭 swap</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">swapoff -a <span class="o">&amp;&amp;</span> sudo sed -i <span class="s1">&#39;s/^.*swap/#&amp;/g&#39;</span> /etc/fstab
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="安装-kubelet-kubeadm-kubectl">安装 kubelet kubeadm kubectl</h3>
+<p>由于网络原因，直接 APT-GET 安装可能安装不了，这里需要配置一下镜像仓库。</p>
+<p><strong>1、配置阿里云 kubernetes 镜像仓库</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ sudo apt-get update <span class="o">&amp;&amp;</span> sudo apt-get install -y apt-transport-https
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">curl https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg <span class="p">|</span> sudo apt-key add -
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>2、创建文件 <code>/etc/apt/sources.list.d/kubernetes.list</code>， 内容如下：</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">deb https://mirrors.aliyun.com/kubernetes/apt/ kubernetes-xenial main
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>3、安装 kubelet kubectl kubeadm</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ sudo apt-get update
+</span></span><span class="line"><span class="cl">$ sudo apt-get install -y kubelet kubeadm kubectl
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>4、设置 kubelet 开机启动</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ sudo systemctl <span class="nb">enable</span> kubelet
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="三部署控制平面节点">三、部署控制平面节点</h2>
+<p>过程中会用到一系列来自 Google 的 docker 镜像，可以通过 <code>kubeadm config images pull</code> 命令验证网络是否能够正常拉取镜像。如果无法访问，可从其他镜像仓库下载，然后再修改镜像标签，以启动相关 pod。</p>
+<h3 id="准备镜像">准备镜像</h3>
+<p>列出安装过程中需要用到的镜像文件，命令为</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubeadm config images list
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ECHO ------</span>
+</span></span><span class="line"><span class="cl">k8s.gcr.io/kube-apiserver:v1.17.0
+</span></span><span class="line"><span class="cl">k8s.gcr.io/kube-controller-manager:v1.17.0
+</span></span><span class="line"><span class="cl">k8s.gcr.io/kube-scheduler:v1.17.0
+</span></span><span class="line"><span class="cl">k8s.gcr.io/kube-proxy:v1.17.0
+</span></span><span class="line"><span class="cl">k8s.gcr.io/pause:3.1
+</span></span><span class="line"><span class="cl">k8s.gcr.io/etcd:3.4.3-0
+</span></span><span class="line"><span class="cl">k8s.gcr.io/coredns:1.6.5
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这里选择从 Docker hub 的 gotok8s 仓库拉取镜像副本，然后再修改 tag 名称，脚本如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl"><span class="nv">images</span><span class="o">=(</span>kube-apiserver:v1.17.0 kube-controller-manager:v1.17.0 kube-scheduler:v1.17.0 kube-proxy:v1.17.0 pause:3.1 etcd:3.4.3-0 coredns:1.6.5<span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> imageName in <span class="si">${</span><span class="nv">images</span><span class="p">[@]</span><span class="si">}</span> <span class="p">;</span> <span class="k">do</span>
+</span></span><span class="line"><span class="cl">  docker pull gotok8s/<span class="nv">$imageName</span>  
+</span></span><span class="line"><span class="cl">  docker tag gotok8s/<span class="nv">$imageName</span> k8s.gcr.io/<span class="nv">$imageName</span>  
+</span></span><span class="line"><span class="cl">  docker rmi gotok8s/<span class="nv">$imageName</span>
+</span></span><span class="line"><span class="cl"><span class="k">done</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="初始化控制平面节点">初始化控制平面节点</h3>
+<p>控制平面节点是运行控制平面组件的机器，包括 etcd（集群数据库）和 API Server （kubectl CLI 与之通信）。</p>
+<p>需要安装 Pod 网络插件，才能使得集群 Pod 间可以相互通信，必须在任何应用程序之前部署 Pod 网络。此外，CoreDNS 将不会在安装网络之前启动。kubeadm 仅支持基于容器网络接口（CNI）的网络，有几个项目使用 CNI 提供了 Kubernetes Pod 网络，其中一些还支持网络策略。有关可用的网络加载项列表，请参阅<a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/#pod-network">网络组件页面</a>。</p>
+<p>另外，请注意，Pod 网络不得与任何主机网络重叠，因为这可能会导致问题。如果发现网络插件的首选 Pod 网络与某些主机网络之间发生冲突，在执行命令 kubeadm init 时应通过指定 &ndash;pod-network-cidr 参数配置网络，并在网络插件的 YAML 中修改相应信息。</p>
+<p>这里选择 <code>calico</code> 网络插件，根据 Calico 文档说明，我们需为 <code>kubeadm init</code> 指定 <code>--pod-network-cidr=192.168.0.0/16</code> 参数。现在运行 <code>kubeadm init &lt;args&gt; </code>，命令如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo kubeadm init <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    --kubernetes-version<span class="o">=</span>v1.17.0 <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    --apiserver-advertise-address<span class="o">=</span>10.163.10.6 <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    --pod-network-cidr<span class="o">=</span>192.168.0.0/16
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>如果一切正常，安装成功，将输入类似下面的结果信息：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">Your Kubernetes control-plane has initialized successfully!
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">To start using your cluster, you need to run the following as a regular user:
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  mkdir -p <span class="nv">$HOME</span>/.kube
+</span></span><span class="line"><span class="cl">  sudo cp -i /etc/kubernetes/admin.conf <span class="nv">$HOME</span>/.kube/config
+</span></span><span class="line"><span class="cl">  sudo chown <span class="k">$(</span>id -u<span class="k">)</span>:<span class="k">$(</span>id -g<span class="k">)</span> <span class="nv">$HOME</span>/.kube/config
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">You should now deploy a pod network to the cluster.
+</span></span><span class="line"><span class="cl">Run <span class="s2">&#34;kubectl apply -f [podnetwork].yaml&#34;</span> with one of the options listed at:
+</span></span><span class="line"><span class="cl">  https://kubernetes.io/docs/concepts/cluster-administration/addons/
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Then you can join any number of worker nodes by running the following on each as root:
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">kubeadm join 10.163.10.6:6443 --token xxxxxx.xxxxxxxxxxxxxxxx <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    --discovery-token-ca-cert-hash sha256:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>根据提示消息，依次执行以下命令：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">  mkdir -p <span class="nv">$HOME</span>/.kube
+</span></span><span class="line"><span class="cl">  sudo cp -i /etc/kubernetes/admin.conf <span class="nv">$HOME</span>/.kube/config
+</span></span><span class="line"><span class="cl">  sudo chown <span class="k">$(</span>id -u<span class="k">)</span>:<span class="k">$(</span>id -g<span class="k">)</span> <span class="nv">$HOME</span>/.kube/config
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>注意记录输出结果中的 <code>kubeadm join ***</code> 信息，随后在添加工作节点到集群时需要用到，可以复制后暂存在某个地方。</p>
+<h3 id="安装网络">安装网络</h3>
+<p>此时，我们通过 <code>kubectl get pods --all-namespaces</code> 命令，应该可以看到 CoreDNS pod  处于 pending 状态，安装网络以后，它才能处于 running 状态。我们选择 calico 为 pod 提供网络，pod 网络组件本身以 k8s 应用的形式运行，执行下面命令进行安装。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubectl apply -f https://docs.projectcalico.org/v3.11/manifests/calico.yaml
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>安装了 Pod 网络后，可以通过检查 CoreDNS Pod 的运行状态来确认它是否正常工作 <code>kubectl get pods --all-namespaces</code>。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubectl get pods --all-namespaces
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ECHO ----</span>
+</span></span><span class="line"><span class="cl">NAMESPACE     NAME                                       READY   STATUS    RESTARTS   AGE
+</span></span><span class="line"><span class="cl">kube-system   calico-kube-controllers-7bd78b474d-vmq2w   1/1     Running   <span class="m">0</span>          4m57s
+</span></span><span class="line"><span class="cl">kube-system   calico-node-2cwtx                          1/1     Running   <span class="m">0</span>          4m57s
+</span></span><span class="line"><span class="cl">kube-system   coredns-5c98db65d4-gv2j6                   1/1     Running   <span class="m">0</span>          10m
+</span></span><span class="line"><span class="cl">kube-system   coredns-5c98db65d4-n6lpj                   1/1     Running   <span class="m">0</span>          10m
+</span></span><span class="line"><span class="cl">kube-system   etcd-vm-10-13-ubuntu                       1/1     Running   <span class="m">0</span>          8m54s
+</span></span><span class="line"><span class="cl">kube-system   kube-apiserver-vm-10-13-ubuntu             1/1     Running   <span class="m">0</span>          9m10s
+</span></span><span class="line"><span class="cl">kube-system   kube-controller-manager-vm-10-13-ubuntu    1/1     Running   <span class="m">0</span>          9m3s
+</span></span><span class="line"><span class="cl">kube-system   kube-proxy-qbk66                           1/1     Running   <span class="m">0</span>          10m
+</span></span><span class="line"><span class="cl">kube-system   kube-scheduler-vm-10-13-ubuntu             1/1     Running   <span class="m">0</span>          9m8s
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>pod 启动需要时间，请耐心等待。</p>
+<h2 id="四加入工作节点">四、加入工作节点</h2>
+<p>CoreDNS Pod 启动并运行后，我们可以为集群添加工作节点。工作节点服务器需安装 Docker 、kubeadm 和 kubelet，安装过程请参考前面相关小节。</p>
+<h3 id="拉取镜像">拉取镜像</h3>
+<p>工作节点服务器需要至少启动两个 pod ，用到的镜像为 <code>kube-proxy</code> 和 <code>pause</code> ，同理我们无法直接从 k8s.grc.io 下载，需要提前拉取镜像并修改 tag ，执行下面命令：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl"><span class="nv">images</span><span class="o">=(</span>kube-proxy:v1.17.0 pause:3.1<span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> imageName in <span class="si">${</span><span class="nv">images</span><span class="p">[@]</span><span class="si">}</span> <span class="p">;</span> <span class="k">do</span>
+</span></span><span class="line"><span class="cl">  docker pull gotok8s/<span class="nv">$imageName</span>  
+</span></span><span class="line"><span class="cl">  docker tag gotok8s/<span class="nv">$imageName</span> k8s.gcr.io/<span class="nv">$imageName</span>  
+</span></span><span class="line"><span class="cl">  docker rmi gotok8s/<span class="nv">$imageName</span>
+</span></span><span class="line"><span class="cl"><span class="k">done</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="加入集群">加入集群</h3>
+<p>执行控制平面节点初始化完成后提供的添加工作节点命令，格式如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubeadm join --token &lt;token&gt; &lt;master-ip&gt;:&lt;master-port&gt; --discovery-token-ca-cert-hash sha256:&lt;hash&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>命令中的 <code>--token</code> 和 <code>--discovery-token-ca-cert-hash</code> 在集群 kube-apiserver 节点部署完成后的结果信息中有体现，直接复制出来即可使用。</p>
+<p>可以通过在控制平面节点执行 <code>kubeadm token list</code> 来获取 token 信息，token 令牌会在 24 小时候失效，如果要创建新的令牌，使用 <code>kubeadm token create</code> 命令。</p>
+<p>可以通过下面命令获取 <code>--discovery-token-ca-cert-hash</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt <span class="p">|</span> openssl rsa -pubin -outform der 2&gt;/dev/null <span class="p">|</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>   openssl dgst -sha256 -hex <span class="p">|</span> sed <span class="s1">&#39;s/^.* //&#39;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>注意，如果需要重新执行 <code>kubeadm join</code> ，需在控制平面节点删除该节点 <code>kubectl delete node node-name</code>，并在工作节点上执行 <code>kubeadm reset</code> 进行清理工作。</p>
+<p>节点执行完 join 命令后，可以在控制平面节点检查 pod 启动进度 <code>watch kubectl get pods --all-namespaces -o wide</code>，观察新节点服务器上的 Pod 状态，正常启动则加入成功且节点状态为 <code>Ready</code>。参照上述步骤，依次将所有工作节点加入集群。</p>
+<h3 id="检查工作节点状态">检查工作节点状态</h3>
+<p>工作节点加入集群后，随着工作节点上相应 Pod 的正常启动，工作节点状态会由 <code>NotReady</code> 切换到 <code>Ready</code>，Pod 启动需要时间，请耐心等待。所有节点正常加入集群后，可以通过命令查看节点状态：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubectl get nodes
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ECHO ------</span>
+</span></span><span class="line"><span class="cl">NAME              STATUS   ROLES    AGE    VERSION   INTERNAL-IP    EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION      CONTAINER-RUNTIME
+</span></span><span class="line"><span class="cl">vm-10-6-ubuntu    Ready    master   9h     v1.15.2   10.163.10.6    &lt;none&gt;        Ubuntu 18.04.1 LTS   4.15.0-54-generic   docker://18.6.3
+</span></span><span class="line"><span class="cl">vm-10-7-ubuntu    Ready    &lt;none&gt;   9h     v1.15.2   10.163.10.7    &lt;none&gt;        Ubuntu 18.04.1 LTS   4.15.0-54-generic   docker://18.6.3
+</span></span><span class="line"><span class="cl">vm-10-8-ubuntu    Ready    &lt;none&gt;   9h     v1.15.2   10.163.10.8    &lt;none&gt;        Ubuntu 18.04.1 LTS   4.15.0-54-generic   docker://18.6.3
+</span></span><span class="line"><span class="cl">vm-10-9-ubuntu    Ready    &lt;none&gt;   8h     v1.15.2   10.163.10.9    &lt;none&gt;        Ubuntu 18.04.1 LTS   4.15.0-54-generic   docker://18.6.3
+</span></span><span class="line"><span class="cl">vm-10-10-ubuntu   Ready    &lt;none&gt;   120m   v1.15.2   10.163.10.20   &lt;none&gt;        Ubuntu 18.04.1 LTS   4.15.0-54-generic   docker://18.6.3
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="五安装-dashboard">五、安装 Dashboard</h2>
+<p>Dashboard 不会随集群一起安装，需要单独部署，执行下面命令安装：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-rc2/aio/deploy/recommended.yaml
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这里要注意 Dashboard 的版本，并非所有版本的 Dashboard 都能和任意版本的 k8s 集群完全兼容。引用官网对照表</p>
+<div class="table-responsive"><table class="table">
+<thead>
+<tr>
+<th>Kubernetes version</th>
+<th>1.11</th>
+<th>1.12</th>
+<th>1.13</th>
+<th>1.14</th>
+<th>1.15</th>
+<th>1.16</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Compatibility</td>
+<td>?</td>
+<td>?</td>
+<td>?</td>
+<td>?</td>
+<td>?</td>
+<td>✓</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li><strong>✓</strong> 完全支持。</li>
+<li><strong>?</strong> 由于 Kubernetes API 版本之间的变化，部分功能无法正确地在 Dashboard 中工作。</li>
+</ul>
+<p>默认情况下，Dashboard 使用最小 RBAC 配置进行部署。目前，Dashboard 仅支持使用 Bearer Token 登录。可以按照<a href="https://github.com/kubernetes/dashboard/wiki/Creating-sample-user">关于创建示例用户的指南</a> 进行操作。</p>
+<p>关于 Dashboard 的使用，随后会抽时间再详细写一篇进行介绍。</p>
+<h2 id="六inress-nginx">六、Inress-nginx</h2>
+<ol>
+<li>
+<p>选择一个节点，打上 <code>node.k8s.xx.cn/role: ingress</code> 标签，以便于下一步进行 Pod 调度。</p>
+</li>
+<li>
+<p>下载 ingress-nginx 资源信息</p>
+</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">wget https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/mandatory.yaml
+</span></span><span class="line"><span class="cl">wget https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/baremetal/service-nodeport.yaml
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol>
+<li>修改配置信息</li>
+</ol>
+<p>修改 ingress-nginx 安装文件 <code>mandatory.yaml</code>，以确保 nginx-ingress-controller 运行在指定节点上。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nn">...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">nodeSelector</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">kubernetes.io/os</span><span class="p">:</span><span class="w"> </span><span class="l">linux</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">node.k8s.xx.cn/role</span><span class="p">:</span><span class="w"> </span><span class="l">ingress</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">serviceAccountName</span><span class="p">:</span><span class="w"> </span><span class="l">nginx-ingress-serviceaccount</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nn">...</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>配置 service 为集群 IP 类型，并配置 <code>externalIPs</code> 以对外暴露服务。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Service</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">ingress-nginx</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">ingress-nginx</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">labels</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">app.kubernetes.io/name</span><span class="p">:</span><span class="w"> </span><span class="l">ingress-nginx</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">app.kubernetes.io/part-of</span><span class="p">:</span><span class="w"> </span><span class="l">ingress-nginx</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">ClusterIP</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">externalIPs</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="m">10.163.10.7</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">ports</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">http</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="m">80</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="m">80</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l">TCP</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">https</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="m">443</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="m">443</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l">TCP</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">selector</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">app.kubernetes.io/name</span><span class="p">:</span><span class="w"> </span><span class="l">ingress-nginx</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">app.kubernetes.io/part-of</span><span class="p">:</span><span class="w"> </span><span class="l">ingress-nginx</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nn">---</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><ol>
+<li>安装 ingress-nginx</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubectl apply -f mandatory.yaml
+</span></span><span class="line"><span class="cl">kubectl apply -f service-nodeport.yaml
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="七访问-dashboard">七、访问 Dashboard</h2>
+<p>现在有了 Dashboard 和 Ingress 我们可以通过一些简单的配置使 dashbaord 可从外部访问。</p>
+<p><strong>1、创建 Service 以将外部流量倒向 Dashboard</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Service</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">kubernetes-dashboard</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">kubernetes-dashboard</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">labels</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">k8s-app</span><span class="p">:</span><span class="w"> </span><span class="l">kubernetes-dashboard</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">ports</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l">TCP</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="m">443</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="m">8443</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">selector</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">k8s-app</span><span class="p">:</span><span class="w"> </span><span class="l">kubernetes-dashboard</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">ClusterIP</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">sessionAffinity</span><span class="p">:</span><span class="w"> </span><span class="l">None</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>2、创建存储 TLS 数字证书的 Secret</strong></p>
+<p>Dashboard 只能通过 HTTPS 访问，我们需要准备一个域名并为其签发数字证书。以 <code>www.yourdomain.com</code> 域名为例，在命名空间 <code>kubernetes-dashboard</code> 创建 Secret。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubectl create secret tls cloud.jfjbapp.cn --cert<span class="o">=</span><span class="nv">$HOME</span>/certs/dashboard.crt --key<span class="o">=</span><span class="nv">$HOME</span>/certs/dashboard.key -n kubernetes-dashboard
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>3、创建 Ingerss 将外部流量倒入集群</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Ingress</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">extensions/v1beta1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">dashboard-ingress</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">kubernetes-dashboard</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">annotations</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/backend-protocol</span><span class="p">:</span><span class="w"> </span><span class="l">HTTPS</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/rewrite-target</span><span class="p">:</span><span class="w"> </span><span class="l">/$2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/use-regex</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;true&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">tls</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">hosts</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="l">www.yourdomain.com</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">secretName</span><span class="p">:</span><span class="w"> </span><span class="l">www.yourdomain.com</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">rules</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l">www.yourdomain.com</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">http</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">paths</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span>- <span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l">/kube(/|$)(.*)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">backend</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">              </span><span class="nt">serviceName</span><span class="p">:</span><span class="w"> </span><span class="l">kubernetes-dashboard</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">              </span><span class="nt">servicePort</span><span class="p">:</span><span class="w"> </span><span class="m">443</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>浏览器访问 <a href="https://www.yourdomain.com/kube/">https://www.yourdomain.com/kube/</a>，输入登陆信息，即可正常使用 Kubernetes Dashboard 。</p>
+<h2 id="八完成">八、完成</h2>
+<p>现在我们已经拥有一个 4 工作节点的单控制平面 k8s 集群，本文仅简单介绍了部署过程，关于集群的管理、使用还会涉及到非常多 k8s 概念及领域知识，官网文档基本上很详细的介绍了各类概念，还有详尽的操作演示，可以多看、多实践。</p>
+
+            </article>
+
+            <div class="post-tag">
+                <strong>Tags:</strong>
+                
+                
+                <a href="https://gauliang.github.iotags/kubernetes">kubernetes</a>
+                
+                 / 
+                <a href="https://gauliang.github.iotags/docker">docker</a>
+                
+                 / 
+                <a href="https://gauliang.github.iotags/dashboard">dashboard</a>
+                
+                 / 
+                <a href="https://gauliang.github.iotags/ingress-nginx">ingress-nginx</a>
+                
+            </div>
+
+
+            <div class="next-and-prev-post">
+                
+                <a href="https://gauliang.github.io/blog/2020/microservice-api-gateway-krakend/" class="prev-post">
+                    <i class="icon ti-arrow-left"></i>
+                    <div class="text">
+                        <div class="caption">2020-01-11 15:28:13</div>
+                        <div class="title">微服务 API 网关 KrakenD</div>
+                    </div>
+                </a>
+                
+                
+                <a href="https://gauliang.github.io/blog/2020/how-to-install-java-with-apt-get-on-ubuntu/" class="next-post">
+                    <div class="text">
+                        <div class="caption">2020-01-21 00:20:08</div>
+                        <div class="title">Ubuntu 18.04 安装 Java 环境 - OpenJDK</div>
+                    </div>
+                    <i class="icon ti-arrow-right"></i>
+                </a>
+                
+            </div>
+
+        </div>
+        <div class="col-xl-2 d-none d-xl-block">
+            
+            
+        </div>
+    </div>
+
+</div>
+
+        </div><footer class="page-footer">
+    <div class="container">
+        <div class="copyright">
+            <pre><code>$ echo "simple things scale." </code></pre>
+            <ul>
+                <li><a href="https://gauliang.github.io">Home page</a></li>
+                <li><a href="https://gauliang.github.io"><i class="ti-info-alt"></i> about</a></li>
+                <li><a href="https://github.com/gauliang" target="_blank"><i class="ti-github"></i> GitHub</a></li>
+            </ul>
+        </div>
+    </div>
+</footer>
+
+<a id="scroll-to-top" href="javascript:void(0);">Scroll to top</a>
+
+<script src="/vendor/jquery/jquery-3.4.1.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="/vendor/svgjs/svg.min.js"></script>
+<script src="/js/javascript.js"></script></body>
+</html>

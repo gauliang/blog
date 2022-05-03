@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Blogs on Gauliang</title>
+    <link>https://gauliang.github.io/blog/</link>
+    <description>Recent content in Blogs on Gauliang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Thu, 26 Nov 2020 18:15:32 +0800</lastBuildDate><atom:link href="https://gauliang.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Throttling and Debounce</title>
+      <link>https://gauliang.github.io/blog/2020/throttle-and-debounce/</link>
+      <pubDate>Thu, 26 Nov 2020 18:15:32 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/throttle-and-debounce/</guid>
+      <description>Throttle 节流是指，确保连续发生的事件（函数调用）按指定频率（时间间隔）触发执行器。 如：无论函数以什么频率被调用，均需确保在指定的时间区间内最大执行</description>
+    </item>
+    
+    <item>
+      <title>深入 React Redux</title>
+      <link>https://gauliang.github.io/blog/2020/dive-react-redux/</link>
+      <pubDate>Sun, 15 Nov 2020 08:24:14 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/dive-react-redux/</guid>
+      <description>要谈论 react-redux 得先从了解 flux 和 redux 开始，flux 本身是一种架构模式，redux 是一个实现了 Flux 架构模式的面向 JS 的通用状态管理器， react-redux 提供了一种机制使得我们</description>
+    </item>
+    
+    <item>
+      <title>深入 Webpack</title>
+      <link>https://gauliang.github.io/blog/2020/dive-into-webpack/</link>
+      <pubDate>Thu, 05 Nov 2020 08:34:50 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/dive-into-webpack/</guid>
+      <description>前端生态蓬勃发展，各垂直领域都有众多设计精良的优秀项目，几乎在所有场景中，应用系统都不同程度依赖这些三方项目。 同时，新的设计理念不断被提出并</description>
+    </item>
+    
+    <item>
+      <title>深入 Flexbox Layout</title>
+      <link>https://gauliang.github.io/blog/2020/flex-layout/</link>
+      <pubDate>Sun, 25 Oct 2020 16:06:20 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/flex-layout/</guid>
+      <description>弹性布局的核心思想，是对容器及其内部元素进行排版，并控制子元素以合适的方式填充可用空间。 在弹性布局模型中，弹性容器的子元素可以在任何方向上排</description>
+    </item>
+    
+    <item>
+      <title>Javascript Closure</title>
+      <link>https://gauliang.github.io/blog/2020/javascript-closure/</link>
+      <pubDate>Sun, 11 Oct 2020 18:45:55 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/javascript-closure/</guid>
+      <description>什么是闭包 定义 函数和与其相关的词法环境（lexical environment）一起构成闭包（closure）。 闭包可以让你从内部函数访问外部</description>
+    </item>
+    
+    <item>
+      <title>Block Formatting Context</title>
+      <link>https://gauliang.github.io/blog/2020/block-formatting-context/</link>
+      <pubDate>Sat, 10 Oct 2020 17:03:29 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/block-formatting-context/</guid>
+      <description>了解 BFC 是什么，它具备什么布局特性，以及如何创建 BFC，有助于深入理解 CSS 布局的工作方式。 什么是 BFC 块格式化上下文(Block Formatting Context) 是一个独立的渲染</description>
+    </item>
+    
+    <item>
+      <title>Javascript Promise</title>
+      <link>https://gauliang.github.io/blog/2020/promise/</link>
+      <pubDate>Sun, 13 Sep 2020 20:00:24 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/promise/</guid>
+      <description>JavaScript 是单线程工作，这意味着两段脚本不能同时运行，而是必须一个接一个地运行。 操作其中一项任务会延迟其他任务。您可能已使用事件和回调来解决该问题。</description>
+    </item>
+    
+    <item>
+      <title>Git Rebase</title>
+      <link>https://gauliang.github.io/blog/2020/git-rebase/</link>
+      <pubDate>Sun, 13 Sep 2020 09:39:21 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/git-rebase/</guid>
+      <description>在 Git 中整合来自不同分支的修改主要有两种方法：merge 以及 rebase。 这两种整合方法的最终效果一致，但 rebase 使得提交历史更加整洁。 在查看一个经</description>
+    </item>
+    
+    <item>
+      <title>ECMAScript Modules</title>
+      <link>https://gauliang.github.io/blog/2020/es-modules/</link>
+      <pubDate>Mon, 07 Sep 2020 17:14:01 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/es-modules/</guid>
+      <description>ES6 中首次内置了对模块的支持。从理论上讲，ECMAScript 模块应该在所有 JavaScript 环境中通用。实际上，浏览器仍然是ES模块的主要目标。 默认情况下，</description>
+    </item>
+    
+    <item>
+      <title>CommonJS Modules</title>
+      <link>https://gauliang.github.io/blog/2020/commonjs-modules/</link>
+      <pubDate>Sun, 06 Sep 2020 10:19:40 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/commonjs-modules/</guid>
+      <description>CommonJS Modules 在 ES2015（也被称为ES6） 标准之前，JavaScript语言没有模块化组织代码的原生方法，CommonJS 模块格式填补了这一空白。</description>
+    </item>
+    
+    <item>
+      <title>Javascript 模块化概述</title>
+      <link>https://gauliang.github.io/blog/2020/what-are-cjs-amd-umd-and-esm-in-javascript/</link>
+      <pubDate>Sat, 05 Sep 2020 16:04:37 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/what-are-cjs-amd-umd-and-esm-in-javascript/</guid>
+      <description>当我们提及模块化时，通常意味着是由一组高度分离的，不同的功能块存储在模块中组成的。 在可能的情况下，通过松散耦合消除依赖关系简化应用程序的可维</description>
+    </item>
+    
+    <item>
+      <title>Javascript 箭头函数最佳实践[译]</title>
+      <link>https://gauliang.github.io/blog/2020/javascript-arrow-function-best-practices/</link>
+      <pubDate>Sat, 05 Sep 2020 10:51:40 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/javascript-arrow-function-best-practices/</guid>
+      <description>Javascript 箭头函数最佳实践 英文原文： 5 Best Practices to Write Quality Arrow Functions 箭头函数的语法简洁明了，非常适合作为回调使用，这里介绍 5 个有关箭头函数的最佳实践。 一、箭头函数名</description>
+    </item>
+    
+    <item>
+      <title>Gitlab CE Work Flow</title>
+      <link>https://gauliang.github.io/blog/2020/gitlab-ce-work-flow/</link>
+      <pubDate>Sat, 29 Aug 2020 08:09:15 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/gitlab-ce-work-flow/</guid>
+      <description>本系列文章旨在整理和规范 Gitlab-CE 在团队协作中的最佳应用建议。内容将覆盖工作流规范、CI、CD、WebHooks、ChatOps、Gitlab API</description>
+    </item>
+    
+    <item>
+      <title>安装和配置 kubectl &amp; istioctl</title>
+      <link>https://gauliang.github.io/blog/2020/kubectl-and-istio/</link>
+      <pubDate>Sun, 09 Aug 2020 11:13:31 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/kubectl-and-istio/</guid>
+      <description>一、Kubectl kubectl 是 Kubernetes 的命令行工具，通过它可以对 Kubernetes 集群执行指定的命令。 通过 kubectl 你可以部署应用，检查和管理集群资源并查看日志等。 1. 安装 kubectl Linux ubuntu 系</description>
+    </item>
+    
+    <item>
+      <title>在 Linux 和 Windows 平台安装 Docker CE</title>
+      <link>https://gauliang.github.io/blog/2020/install-docker-engine/</link>
+      <pubDate>Wed, 22 Jan 2020 16:32:22 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/install-docker-engine/</guid>
+      <description>Docker 是一个用于开发、交付和运行应用程序的开放平台。Docker 使您能够将应用程序与基础架构分开，以与管理应用程序相同的方式来管理基础架构，从而</description>
+    </item>
+    
+    <item>
+      <title>常用系统 root 密码重置</title>
+      <link>https://gauliang.github.io/blog/2020/reset-password/</link>
+      <pubDate>Tue, 21 Jan 2020 22:44:48 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/reset-password/</guid>
+      <description>1、MySql 5.7 本节介绍如何重置 MySql 5.7 系统 root 用户密码。 首选，以安全模式登录 1 2 3 4 5 6 7 8 9 10 11 12 13 14 # Stop MySQL sudo service mysql stop # Make MySQL service directory. sudo mkdir -p /var/run/mysqld # Give MySQL user</description>
+    </item>
+    
+    <item>
+      <title>Ubuntu 18.04 安装 Java 环境 - OpenJDK</title>
+      <link>https://gauliang.github.io/blog/2020/how-to-install-java-with-apt-get-on-ubuntu/</link>
+      <pubDate>Tue, 21 Jan 2020 00:20:08 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/how-to-install-java-with-apt-get-on-ubuntu/</guid>
+      <description>Java 和 JVM（Java 的虚拟机）被广泛使用，本文介绍如何使用 apt-get 安装不同版本的 Open JRE 和 Open JDK。JRE 仅用于提供 Java 应用程序执行环境，如果要编译 Java 应</description>
+    </item>
+    
+    <item>
+      <title>使用 kubeadm 安装单控制平面 Kubernetes 集群</title>
+      <link>https://gauliang.github.io/blog/2020/creating-single-control-plane-cluster-with-kubeadm/</link>
+      <pubDate>Sun, 19 Jan 2020 20:30:54 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/creating-single-control-plane-cluster-with-kubeadm/</guid>
+      <description>部署单控制平面 k8s 集群，并安装 Dashboard 和 ingress-nginx 使外部浏览器可以访问集群。 一、拓扑结构 本文主要介绍如何使用 kubeadm 安装部署单控制平面 Kubernetes v1.17.0 集群，所谓单控制平面，顾</description>
+    </item>
+    
+    <item>
+      <title>微服务 API 网关 KrakenD</title>
+      <link>https://gauliang.github.io/blog/2020/microservice-api-gateway-krakend/</link>
+      <pubDate>Sat, 11 Jan 2020 15:28:13 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/microservice-api-gateway-krakend/</guid>
+      <description>KrakenD 是用 Go 编写的开源高性能无状态、分布式、微服务 API 网关，其不仅可以轻松将客户端请求转发到后端服务，还具备强大的数据处理功能，支持转换、过滤、聚</description>
+    </item>
+    
+    <item>
+      <title>ubuntu 开发环境备忘指南</title>
+      <link>https://gauliang.github.io/blog/2020/ubuntu-handbook/</link>
+      <pubDate>Sat, 21 Dec 2019 23:20:31 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/ubuntu-handbook/</guid>
+      <description>一、基本系统设置 1 2 3 4 5 6 # 1. 移除桌面图标显示 sudo apt remove gnome-shell-extension-desktop-icons # 2. 移除桌面边栏菜单 sudo apt remove gnome-shell-extension-ubuntu-dock 当前系统链接多个显示器，在桌面空间切换时，默认仅切换主显</description>
+    </item>
+    
+  </channel>
+</rss>

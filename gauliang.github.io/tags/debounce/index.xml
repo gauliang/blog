@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>debounce on Gauliang</title>
+    <link>https://gauliang.github.io/tags/debounce/</link>
+    <description>Recent content in debounce on Gauliang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Thu, 26 Nov 2020 18:15:32 +0800</lastBuildDate><atom:link href="https://gauliang.github.io/tags/debounce/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Throttling and Debounce</title>
+      <link>https://gauliang.github.io/blog/2020/throttle-and-debounce/</link>
+      <pubDate>Thu, 26 Nov 2020 18:15:32 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/throttle-and-debounce/</guid>
+      <description>Throttle 节流是指，确保连续发生的事件（函数调用）按指定频率（时间间隔）触发执行器。 如：无论函数以什么频率被调用，均需确保在指定的时间区间内最大执行</description>
+    </item>
+    
+  </channel>
+</rss>

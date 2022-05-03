@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>layout on Gauliang</title>
+    <link>https://gauliang.github.io/tags/layout/</link>
+    <description>Recent content in layout on Gauliang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Sun, 25 Oct 2020 16:06:20 +0800</lastBuildDate><atom:link href="https://gauliang.github.io/tags/layout/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>深入 Flexbox Layout</title>
+      <link>https://gauliang.github.io/blog/2020/flex-layout/</link>
+      <pubDate>Sun, 25 Oct 2020 16:06:20 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/flex-layout/</guid>
+      <description>弹性布局的核心思想，是对容器及其内部元素进行排版，并控制子元素以合适的方式填充可用空间。 在弹性布局模型中，弹性容器的子元素可以在任何方向上排</description>
+    </item>
+    
+    <item>
+      <title>Block Formatting Context</title>
+      <link>https://gauliang.github.io/blog/2020/block-formatting-context/</link>
+      <pubDate>Sat, 10 Oct 2020 17:03:29 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/block-formatting-context/</guid>
+      <description>了解 BFC 是什么，它具备什么布局特性，以及如何创建 BFC，有助于深入理解 CSS 布局的工作方式。 什么是 BFC 块格式化上下文(Block Formatting Context) 是一个独立的渲染</description>
+    </item>
+    
+  </channel>
+</rss>

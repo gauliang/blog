@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>安装和配置 kubectl &amp; istioctl - Gauliang</title>
+
+<link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="/vendor/themify-icons/themify-icons.css">
+
+
+<link rel="stylesheet" href="https://gauliang.github.io/scss/main.min.7f61b4e8391e65e8610cea419646501340197a41be59be698ae440173dcb74cb.css"><body data-spy="scroll" data-target="#table-of-contents"><header class="navigation" id="navigation">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg">
+            <a class="navbar-brand" href="/">
+                <img src="/logo.svg" alt="Gl">
+            </a>            
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="ti-menu"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">                    
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    
+                    
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/blog/">
+                            <span>博客</span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/series/">
+                            <span>系列</span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/tags/">
+                            <span>Tags</span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+            </div>
+        </nav>
+    </div>
+</header><div id="content">
+
+<header class="post-header">
+    <div class="container">
+        <h1 class="post-title">安装和配置 kubectl &amp; istioctl</h1>
+        <div class="post-time">
+            Aug 9, 2020 by Gl
+        </div>
+    </div>
+</header>
+<div class="container">
+    <div class="row">
+        <div class="col-xl-2 col-lg-3 d-none d-xl-block d-lg-block">
+            <div class="table-of-contents" id="table-of-contents">
+                
+                <nav id="TableOfContents">
+  <ul>
+    <li><a class="nav-link"  href="#一kubectl">一、Kubectl</a>
+    </li>
+    <li><a class="nav-link"  href="#二istioctl">二、Istioctl</a>
+    </li>
+    <li><a class="nav-link"  href="#三参考">三、参考</a></li>
+  </ul>
+</nav>
+            </div>
+        </div>
+        <div class="col-xl-8 col-lg-9 post-content">
+            <div class="post-meta-count">
+                <i class="ti-info-alt"></i>
+                <strong>阅读全文约需 3 分钟</strong>
+            </div>
+            <article id="post-content">
+
+                
+                <h2 id="一kubectl">一、Kubectl</h2>
+<p><code>kubectl</code> 是 Kubernetes 的命令行工具，通过它可以对 Kubernetes 集群执行指定的命令。
+通过 <code>kubectl</code> 你可以部署应用，检查和管理集群资源并查看日志等。</p>
+<h3 id="1-安装-kubectl">1. 安装 kubectl</h3>
+<p><strong>Linux</strong> ubuntu 系统</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo apt install kubectl
+</span></span><span class="line"><span class="cl"><span class="c1"># 测试</span>
+</span></span><span class="line"><span class="cl">kubectl version --client
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>Macos</strong> 系统</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">brew install kubectl
+</span></span><span class="line"><span class="cl"><span class="c1"># 测试</span>
+</span></span><span class="line"><span class="cl">kubectl version --client
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="2-配置-kubectl-自动补全">2. 配置 kubectl 自动补全</h3>
+<p>kubectl 为 bash 和 zsh 提供自动补全能力。<code>kubectl completion bash</code> 命令可生成 Bash 的自动补全脚本，该脚本基于 <strong>bash-completion</strong>，需要线安装该软件。</p>
+<p><strong>Linux</strong> 系统</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 该命令会创建 `/usr/share/bash-completion/bash_completion`</span>
+</span></span><span class="line"><span class="cl">sudo apt install bash-completion
+</span></span><span class="line"><span class="cl"><span class="c1"># 启用kubectl自动补全</span>
+</span></span><span class="line"><span class="cl"><span class="nb">echo</span> <span class="s1">&#39;source &lt;(kubectl completion bash)&#39;</span> &gt;&gt;~/.bashrc
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>MacOS</strong> 系统</p>
+<p>将以下内容添加到 <code>~/.zshrc</code> 文件中：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">autoload -Uz compinit
+</span></span><span class="line"><span class="cl">compinit
+</span></span><span class="line"><span class="cl"><span class="nb">source</span> &lt;<span class="o">(</span>kubectl completion zsh<span class="o">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="二istioctl">二、Istioctl</h2>
+<h3 id="1-安装-istioctl">1. 安装 istioctl</h3>
+<p><strong>Linux</strong> 系统</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo apt install istioctl
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>Macos</strong> 系统</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">brew install istioctl
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="2-配置-istioctl-自动补全">2. 配置 istioctl 自动补全</h3>
+<p>要 istioctl 在系统上启用完成功能，请执行以下步骤：</p>
+<p><strong>Linux</strong> 系统</p>
+<p>如果您使用的是基于 Linux 的操作系统，则可以使用以下 <code>apt-get install bash-completion</code> 命令安装Bash完成包：基于 Debian 的 Linux 发行版
+或 <code>yum install bash-completion</code> 基于 RPM 的 Linux 发行版，这是最常见的两种情况。</p>
+<p>在 Linux 系统上安装了 bash-completion 软件包之后，将以下行添加到~/.bash_profile文件中：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="o">[[</span> -r <span class="s2">&#34;/usr/local/etc/profile.d/bash_completion.sh&#34;</span> <span class="o">]]</span> <span class="o">&amp;&amp;</span> . <span class="s2">&#34;/usr/local/etc/profile.d/bash_completion.sh&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>MacOS</strong> 系统</p>
+<p>将以下内容添加到 <code>~/.zshrc</code> 文件中：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">source</span> ~/_istioctl
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="三参考">三、参考</h2>
+<ol>
+<li><a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/#optional-kubectl-configurations">https://kubernetes.io/docs/tasks/tools/install-kubectl/#optional-kubectl-configurations</a></li>
+<li><a href="https://istio.io/latest/docs/ops/diagnostic-tools/istioctl/#istioctl-auto-completion">https://istio.io/latest/docs/ops/diagnostic-tools/istioctl/#istioctl-auto-completion</a></li>
+</ol>
+
+            </article>
+
+            <div class="post-tag">
+                <strong>Tags:</strong>
+                
+                
+                <a href="https://gauliang.github.iotags/cloudnative">cloudnative</a>
+                
+                 / 
+                <a href="https://gauliang.github.iotags/linux">linux</a>
+                
+                 / 
+                <a href="https://gauliang.github.iotags/kubernetes">kubernetes</a>
+                
+                 / 
+                <a href="https://gauliang.github.iotags/service-mesh">service-mesh</a>
+                
+            </div>
+
+
+            <div class="next-and-prev-post">
+                
+                <a href="https://gauliang.github.io/blog/2020/install-docker-engine/" class="prev-post">
+                    <i class="icon ti-arrow-left"></i>
+                    <div class="text">
+                        <div class="caption">2020-01-22 16:32:22</div>
+                        <div class="title">在 Linux 和 Windows 平台安装 Docker CE</div>
+                    </div>
+                </a>
+                
+                
+                <a href="https://gauliang.github.io/blog/2020/gitlab-ce-work-flow/" class="next-post">
+                    <div class="text">
+                        <div class="caption">2020-08-29 08:09:15</div>
+                        <div class="title">Gitlab CE Work Flow</div>
+                    </div>
+                    <i class="icon ti-arrow-right"></i>
+                </a>
+                
+            </div>
+
+        </div>
+        <div class="col-xl-2 d-none d-xl-block">
+            
+            
+            <ul class="post-related">
+                
+                <li><a href="/blog/2020/creating-single-control-plane-cluster-with-kubeadm/">使用 kubeadm 安装单控制平面 Kubernetes 集群</a></li>
+                
+                <li><a href="/blog/2020/microservice-api-gateway-krakend/">微服务 API 网关 KrakenD</a></li>
+                
+                <li><a href="/blog/2020/ubuntu-handbook/">ubuntu 开发环境备忘指南</a></li>
+                
+            </ul>
+            
+        </div>
+    </div>
+
+</div>
+
+        </div><footer class="page-footer">
+    <div class="container">
+        <div class="copyright">
+            <pre><code>$ echo "simple things scale." </code></pre>
+            <ul>
+                <li><a href="https://gauliang.github.io">Home page</a></li>
+                <li><a href="https://gauliang.github.io"><i class="ti-info-alt"></i> about</a></li>
+                <li><a href="https://github.com/gauliang" target="_blank"><i class="ti-github"></i> GitHub</a></li>
+            </ul>
+        </div>
+    </div>
+</footer>
+
+<a id="scroll-to-top" href="javascript:void(0);">Scroll to top</a>
+
+<script src="/vendor/jquery/jquery-3.4.1.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="/vendor/svgjs/svg.min.js"></script>
+<script src="/js/javascript.js"></script></body>
+</html>

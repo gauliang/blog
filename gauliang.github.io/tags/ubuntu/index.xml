@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>ubuntu on Gauliang</title>
+    <link>https://gauliang.github.io/tags/ubuntu/</link>
+    <description>Recent content in ubuntu on Gauliang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Sat, 21 Dec 2019 23:20:31 +0800</lastBuildDate><atom:link href="https://gauliang.github.io/tags/ubuntu/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ubuntu 开发环境备忘指南</title>
+      <link>https://gauliang.github.io/blog/2020/ubuntu-handbook/</link>
+      <pubDate>Sat, 21 Dec 2019 23:20:31 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/ubuntu-handbook/</guid>
+      <description>一、基本系统设置 1 2 3 4 5 6 # 1. 移除桌面图标显示 sudo apt remove gnome-shell-extension-desktop-icons # 2. 移除桌面边栏菜单 sudo apt remove gnome-shell-extension-ubuntu-dock 当前系统链接多个显示器，在桌面空间切换时，默认仅切换主显</description>
+    </item>
+    
+  </channel>
+</rss>

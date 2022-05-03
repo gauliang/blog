@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>git on Gauliang</title>
+    <link>https://gauliang.github.io/tags/git/</link>
+    <description>Recent content in git on Gauliang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Sun, 13 Sep 2020 09:39:21 +0800</lastBuildDate><atom:link href="https://gauliang.github.io/tags/git/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Git Rebase</title>
+      <link>https://gauliang.github.io/blog/2020/git-rebase/</link>
+      <pubDate>Sun, 13 Sep 2020 09:39:21 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/git-rebase/</guid>
+      <description>在 Git 中整合来自不同分支的修改主要有两种方法：merge 以及 rebase。 这两种整合方法的最终效果一致，但 rebase 使得提交历史更加整洁。 在查看一个经</description>
+    </item>
+    
+  </channel>
+</rss>

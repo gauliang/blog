@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>linux on Gauliang</title>
+    <link>https://gauliang.github.io/tags/linux/</link>
+    <description>Recent content in linux on Gauliang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Sun, 09 Aug 2020 11:13:31 +0800</lastBuildDate><atom:link href="https://gauliang.github.io/tags/linux/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>安装和配置 kubectl &amp; istioctl</title>
+      <link>https://gauliang.github.io/blog/2020/kubectl-and-istio/</link>
+      <pubDate>Sun, 09 Aug 2020 11:13:31 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/kubectl-and-istio/</guid>
+      <description>一、Kubectl kubectl 是 Kubernetes 的命令行工具，通过它可以对 Kubernetes 集群执行指定的命令。 通过 kubectl 你可以部署应用，检查和管理集群资源并查看日志等。 1. 安装 kubectl Linux ubuntu 系</description>
+    </item>
+    
+    <item>
+      <title>ubuntu 开发环境备忘指南</title>
+      <link>https://gauliang.github.io/blog/2020/ubuntu-handbook/</link>
+      <pubDate>Sat, 21 Dec 2019 23:20:31 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/ubuntu-handbook/</guid>
+      <description>一、基本系统设置 1 2 3 4 5 6 # 1. 移除桌面图标显示 sudo apt remove gnome-shell-extension-desktop-icons # 2. 移除桌面边栏菜单 sudo apt remove gnome-shell-extension-ubuntu-dock 当前系统链接多个显示器，在桌面空间切换时，默认仅切换主显</description>
+    </item>
+    
+  </channel>
+</rss>

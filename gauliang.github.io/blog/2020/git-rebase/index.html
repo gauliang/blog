@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Git Rebase - Gauliang</title>
+
+<link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="/vendor/themify-icons/themify-icons.css">
+
+
+<link rel="stylesheet" href="https://gauliang.github.io/scss/main.min.7f61b4e8391e65e8610cea419646501340197a41be59be698ae440173dcb74cb.css"><body data-spy="scroll" data-target="#table-of-contents"><header class="navigation" id="navigation">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg">
+            <a class="navbar-brand" href="/">
+                <img src="/logo.svg" alt="Gl">
+            </a>            
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="ti-menu"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">                    
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    
+                    
+                    
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/blog/">
+                            <span>博客</span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/series/">
+                            <span>系列</span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/tags/">
+                            <span>Tags</span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+            </div>
+        </nav>
+    </div>
+</header><div id="content">
+
+<header class="post-header">
+    <div class="container">
+        <h1 class="post-title">Git Rebase</h1>
+        <div class="post-time">
+            Sep 13, 2020 by Gl
+        </div>
+    </div>
+</header>
+<div class="container">
+    <div class="row">
+        <div class="col-xl-2 col-lg-3 d-none d-xl-block d-lg-block">
+            <div class="table-of-contents" id="table-of-contents">
+                
+                <nav id="TableOfContents">
+  <ul>
+    <li><a class="nav-link"  href="#执行流程">执行流程</a></li>
+    <li><a class="nav-link"  href="#rebase-进阶">Rebase 进阶</a></li>
+    <li><a class="nav-link"  href="#rebase-风险">Rebase 风险</a></li>
+  </ul>
+</nav>
+            </div>
+        </div>
+        <div class="col-xl-8 col-lg-9 post-content">
+            <div class="post-meta-count">
+                <i class="ti-info-alt"></i>
+                <strong>阅读全文约需 5 分钟</strong>
+            </div>
+            <article id="post-content">
+
+                
+                <p>在 Git 中整合来自不同分支的修改主要有两种方法：<strong>merge</strong> 以及 <strong>rebase</strong>。
+这两种整合方法的最终效果一致，但 rebase 使得提交历史更加整洁。
+在查看一个经过 rebase 的分支历史记录时会发现，尽管实际的开发工作是并行的， 但它们看上去就像是串行的一样，
+提交历史是一条直线没有分叉。</p>
+<h2 id="执行流程">执行流程</h2>
+<p>Rebase 背后的执行流程如下：</p>
+<ol>
+<li>找出 <strong>当前分支</strong> 和 <strong>rebase 目标分支</strong> 的最近共同祖先节点；</li>
+<li>对比当前分支相对于该祖先的历次提交，提取相应的修改并存到临时区域；</li>
+<li>定位目标分支最后更新节点；</li>
+<li>将之前另存为临时文件的修改依序应用。</li>
+<li>在目标分支进行 <strong>快进合并</strong></li>
+</ol>
+<p><strong>rebase</strong> 将一系列提交按照原有次序依次应用到另一分支上，这与 <strong>merge</strong> 直接把最终结果合并在一起创建新的提交不同。
+这也意味着，<strong>rebase</strong> 修改了提交历史。</p>
+<h2 id="rebase-进阶">Rebase 进阶</h2>
+<p>在对两个分支进行 rebase 时，生成的 ”补丁“ 不一定要在目标分支上应用，还可以指定另外一个分支进行应用。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git rebase --onto master server client
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>以上命令将取出 client 分支，找出它从 server 分支分岔之后的补丁， 然后把这些补丁在 master 分支上重放一遍，让 client 看起来像直接基于 master 修改一样。</p>
+<p>应用补丁过程中的冲突会阻止 rebase 继续执行，在处理完冲突后直接执行 <code>git rebase --continue</code> 即可，无需 <code>commit</code>。如果要绕过导致合并失败的提交，可以执行
+<code>git rebase --skip</code>。如果要取消 rebase，执行 <code>git rebase --abort</code>。</p>
+<p>考虑以下情况：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">     A---B---C topic
+</span></span><span class="line"><span class="cl">    /
+</span></span><span class="line"><span class="cl">D---E---F---G master
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>假设你当前处于 <strong>topic</strong> 分支上，执行下面命令，得到结果是相同的：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git rebase master
+</span></span><span class="line"><span class="cl">git rebase master topic
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>结果</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">              A&#39;--B&#39;--C&#39; topic
+</span></span><span class="line"><span class="cl">             /
+</span></span><span class="line"><span class="cl">D---E---F---G master
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="rebase-风险">Rebase 风险</h2>
+<p>不要在公共分支上进行 rebase 操作，别人可能基于你的提交进行开发。总的原则是，只对尚未推送或分享给别人的本地修改执行变基操作清理历史， 从不对已推送至别处的提交执行变基操作，这样，你才能享受到两种方式带来的便利。</p>
+
+            </article>
+
+            <div class="post-tag">
+                <strong>Tags:</strong>
+                
+                
+                <a href="https://gauliang.github.iotags/devops">devops</a>
+                
+                 / 
+                <a href="https://gauliang.github.iotags/git">git</a>
+                
+                 / 
+                <a href="https://gauliang.github.iotags/rebase">rebase</a>
+                
+            </div>
+
+
+            <div class="next-and-prev-post">
+                
+                <a href="https://gauliang.github.io/blog/2020/es-modules/" class="prev-post">
+                    <i class="icon ti-arrow-left"></i>
+                    <div class="text">
+                        <div class="caption">2020-09-07 17:14:01</div>
+                        <div class="title">ECMAScript Modules</div>
+                    </div>
+                </a>
+                
+                
+                <a href="https://gauliang.github.io/blog/2020/promise/" class="next-post">
+                    <div class="text">
+                        <div class="caption">2020-09-13 20:00:24</div>
+                        <div class="title">Javascript Promise</div>
+                    </div>
+                    <i class="icon ti-arrow-right"></i>
+                </a>
+                
+            </div>
+
+        </div>
+        <div class="col-xl-2 d-none d-xl-block">
+            
+            
+            <ul class="post-related">
+                
+                <li><a href="/blog/2020/gitlab-ce-work-flow/">Gitlab CE Work Flow</a></li>
+                
+            </ul>
+            
+        </div>
+    </div>
+
+</div>
+
+        </div><footer class="page-footer">
+    <div class="container">
+        <div class="copyright">
+            <pre><code>$ echo "simple things scale." </code></pre>
+            <ul>
+                <li><a href="https://gauliang.github.io">Home page</a></li>
+                <li><a href="https://gauliang.github.io"><i class="ti-info-alt"></i> about</a></li>
+                <li><a href="https://github.com/gauliang" target="_blank"><i class="ti-github"></i> GitHub</a></li>
+            </ul>
+        </div>
+    </div>
+</footer>
+
+<a id="scroll-to-top" href="javascript:void(0);">Scroll to top</a>
+
+<script src="/vendor/jquery/jquery-3.4.1.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="/vendor/svgjs/svg.min.js"></script>
+<script src="/js/javascript.js"></script></body>
+</html>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>docker on Gauliang</title>
+    <link>https://gauliang.github.io/tags/docker/</link>
+    <description>Recent content in docker on Gauliang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Wed, 22 Jan 2020 16:32:22 +0800</lastBuildDate><atom:link href="https://gauliang.github.io/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>在 Linux 和 Windows 平台安装 Docker CE</title>
+      <link>https://gauliang.github.io/blog/2020/install-docker-engine/</link>
+      <pubDate>Wed, 22 Jan 2020 16:32:22 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/install-docker-engine/</guid>
+      <description>Docker 是一个用于开发、交付和运行应用程序的开放平台。Docker 使您能够将应用程序与基础架构分开，以与管理应用程序相同的方式来管理基础架构，从而</description>
+    </item>
+    
+    <item>
+      <title>使用 kubeadm 安装单控制平面 Kubernetes 集群</title>
+      <link>https://gauliang.github.io/blog/2020/creating-single-control-plane-cluster-with-kubeadm/</link>
+      <pubDate>Sun, 19 Jan 2020 20:30:54 +0800</pubDate>
+      
+      <guid>https://gauliang.github.io/blog/2020/creating-single-control-plane-cluster-with-kubeadm/</guid>
+      <description>部署单控制平面 k8s 集群，并安装 Dashboard 和 ingress-nginx 使外部浏览器可以访问集群。 一、拓扑结构 本文主要介绍如何使用 kubeadm 安装部署单控制平面 Kubernetes v1.17.0 集群，所谓单控制平面，顾</description>
+    </item>
+    
+  </channel>
+</rss>
